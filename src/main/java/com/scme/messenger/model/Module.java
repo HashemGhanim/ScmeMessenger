@@ -27,7 +27,7 @@ public class Module extends BaseEntity {
     // Attributes
     @Id
     @Column(name = "module_id")
-    private Integer moduleId;
+    private String moduleId;
 
     private String name;
 

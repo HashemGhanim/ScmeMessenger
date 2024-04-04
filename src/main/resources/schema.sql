@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS user_table(
     name varchar(100) NOT NULL,
     email varchar(100) NOT NULL UNIQUE,
     role varchar(100) NOT NULL,
-    password varchar(200) NOT NULL,
+    password varchar(200) DEFAULT NULL,
     created_at date NOT NULL,
 	created_by varchar(20) NOT NULL,
 	updated_at date DEFAULT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS user_table(
 );
 
 CREATE TABLE IF NOT EXISTS department(
-	dep_id int NOT NULL,
+	dep_id varchar(100) NOT NULL,
     name varchar(100) NOT NULL,
     manager_id int NOT NULL,
     created_at date NOT NULL,
@@ -36,9 +36,9 @@ CREATE TABLE IF NOT EXISTS department(
 
 
 CREATE TABLE IF NOT EXISTS module_table(
-	module_id int  NOT NULL,
+	module_id varchar(100)  NOT NULL,
     name varchar(100) NOT NULL,
-    dep_id int NOT NULL,
+    dep_id varchar(100) NOT NULL,
     created_at date NOT NULL,
 	created_by varchar(20) NOT NULL,
 	updated_at date DEFAULT NULL,
@@ -50,9 +50,9 @@ CREATE TABLE IF NOT EXISTS module_table(
 
 CREATE TABLE IF NOT EXISTS course(
 	course_id SERIAL,
-    module_id int NOT NULL,
+    module_id varchar(100) NOT NULL,
     name varchar(100) NOT NULL,
-    teacher_id int NOT NULL,
+    teacher_id varchar(100) NOT NULL,
     members int DEFAULT 1,
     image_path varchar(200) DEFAULT 'NON',
     created_at date NOT NULL,
@@ -64,9 +64,9 @@ CREATE TABLE IF NOT EXISTS course(
 
 
 CREATE TABLE IF NOT EXISTS course_user(
-	user_id int  NOT NULL,
-	course_id int  NOT NULL,
-    module_id int NOT NULL,
+	user_id varchar(100)  NOT NULL,
+	course_id varchar(100)  NOT NULL,
+    module_id varchar(100) NOT NULL,
     created_at date NOT NULL,
 	created_by varchar(20) NOT NULL,
 	updated_at date DEFAULT NULL,
@@ -78,8 +78,8 @@ CREATE TABLE IF NOT EXISTS course_user(
 
 CREATE TABLE IF NOT EXISTS chat(
 	chat_id uuid NOT NULL,
-	sender_id int  NOT NULL,
-    recepient_id int NOT NULL,
+	sender_id varchar(100)  NOT NULL,
+    recepient_id varchar(100) NOT NULL,
     created_at date NOT NULL,
 	created_by varchar(20) NOT NULL,
 	updated_at date DEFAULT NULL,
@@ -91,9 +91,9 @@ CREATE TABLE IF NOT EXISTS chat(
 
 CREATE TABLE IF NOT EXISTS chat_message(
 	message_id uuid NOT NULL,
-	chat_id int NOT NULL,
-	sender_id int  NOT NULL,
-    recepient_id int NOT NULL,
+	chat_id uuid NOT NULL,
+	sender_id varchar(100)  NOT NULL,
+    recepient_id varchar(100) NOT NULL,
     created_at date NOT NULL,
 	created_by varchar(20) NOT NULL,
 	updated_at date DEFAULT NULL,
@@ -105,9 +105,9 @@ CREATE TABLE IF NOT EXISTS chat_message(
 
 CREATE TABLE IF NOT EXISTS group_message(
 	message_id uuid,
-    course_id int NOT NULL,
-    module_id int NOT NULL,
-    sender_id int  NOT NULL,
+    course_id varchar(100) NOT NULL,
+    module_id varchar(100) NOT NULL,
+    sender_id varchar(100)  NOT NULL,
     created_at date NOT NULL,
 	created_by varchar(20) NOT NULL,
 	updated_at date DEFAULT NULL,

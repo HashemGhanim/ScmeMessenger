@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.scme.messenger.model.User;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -26,7 +28,7 @@ public class JwtService {
     public String generateToken(UserDetails userDetails, HashMap<String, Object> extraClaim) {
         return Jwts.builder()
                 .signWith(getSignKey())
-                .setSubject(userDetails.getUsername())
+                .setSubject(((User) userDetails).getUserId())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setClaims(extraClaim)
@@ -36,7 +38,7 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
                 .signWith(getSignKey())
-                .setSubject(userDetails.getUsername())
+                .setSubject(((User) userDetails).getUserId())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .compact();

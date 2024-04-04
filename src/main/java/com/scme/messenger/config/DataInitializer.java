@@ -20,15 +20,22 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        User user = User.builder()
+        User user1 = User.builder()
                 .email("hashemzerei45@gmail.com")
                 .name("hashem")
-                .password(passwordEncoder.encode("12345678"))
-                .userId("202011016")
+                .userId("20201101")
                 .role(Role.STUDENT)
                 .build();
 
-        userRepo.save(user);
+        User user2 = User.builder()
+                .email("moodghoz@gmail.com")
+                .name("Mahmmod")
+                .userId("20201102")
+                .role(Role.STUDENT)
+                .build();
+
+        userRepo.save(user1);
+        userRepo.save(user2);
     }
 
 }

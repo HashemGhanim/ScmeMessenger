@@ -1,6 +1,6 @@
-package com.scme.messenger.dto;
+package com.scme.messenger.dto.authenticationdto;
 
-import org.springframework.stereotype.Component;
+import com.scme.messenger.dto.userdto.UserDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,9 +13,9 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Component
 public class AuthenticationResponseDTO {
     private String statusCode;
     private String statusMsg;
     private String token;
+    private UserDTO user;
 }

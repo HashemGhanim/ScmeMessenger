@@ -1,6 +1,6 @@
 package com.scme.messenger.mapper;
 
-import com.scme.messenger.dto.UserDTO;
+import com.scme.messenger.dto.userdto.UserDTO;
 import com.scme.messenger.model.User;
 
 public class UserMapper {

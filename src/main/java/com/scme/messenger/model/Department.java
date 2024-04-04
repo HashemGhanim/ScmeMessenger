@@ -26,7 +26,7 @@ public class Department extends BaseEntity {
     // Attributes
     @Id
     @Column(name = "dep_id")
-    private Integer depId;
+    private String depId;
 
     private String name;
 

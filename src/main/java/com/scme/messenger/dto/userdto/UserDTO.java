@@ -1,6 +1,4 @@
-package com.scme.messenger.dto;
-
-import org.springframework.stereotype.Component;
+package com.scme.messenger.dto.userdto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -17,10 +15,9 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Component
 public class UserDTO {
 
-    @Pattern(regexp = "(^$|[0-9]{8})", message = "User ID must be 8 digits")
+    @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits")
     private String userId;
 
     @NotEmpty(message = "Name can not be a null or empty")

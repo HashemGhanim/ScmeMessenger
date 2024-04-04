@@ -24,9 +24,9 @@ public class GroupMessageID implements Serializable {
     private UUID messageId;
 
     @Column(name = "course_id")
-    private Integer courseId;
+    private String courseId;
 
     @Column(name = "module_id")
-    private Integer moduleId;
+    private String moduleId;
 
 }

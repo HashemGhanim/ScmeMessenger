@@ -1,6 +1,4 @@
-package com.scme.messenger.dto;
-
-import org.springframework.stereotype.Component;
+package com.scme.messenger.dto.authenticationdto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +13,6 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Component
 public class AuthenticationRequestDTO {
     @NotNull(message = "User ID can not be a null or empty")
     private String userId;

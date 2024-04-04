@@ -16,7 +16,7 @@ import lombok.Setter;
 @Embeddable
 public class CourseID implements Serializable {
     @Column(name = "course_id")
-    private Integer courseId;
+    private String courseId;
     @Column(name = "module_id")
-    private Integer moduleId;
+    private String moduleId;
 }

@@ -23,8 +23,8 @@ public class ChatMessageID implements Serializable {
     private UUID chatId;
 
     @Column(name = "sender_id")
-    private Integer senderId;
+    private String senderId;
 
     @Column(name = "recepient_id")
-    private Integer recepientId;
+    private String recepientId;
 }
