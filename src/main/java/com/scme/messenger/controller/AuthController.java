@@ -7,29 +7,22 @@ import com.scme.messenger.dto.authenticationdto.OtpCode;
 import com.scme.messenger.dto.authenticationdto.PasswordDto;
 import org.quartz.SchedulerException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scme.messenger.constants.ResponseConstants;
 import com.scme.messenger.dto.ResponseDto;
 import com.scme.messenger.dto.authenticationdto.AuthenticationRequestDTO;
-import com.scme.messenger.dto.userdto.UserDTO;
 import com.scme.messenger.services.IAuthService;
 import com.scme.messenger.services.IEmailJobService;
-import com.scme.messenger.services.IOTPService;
-import com.scme.messenger.services.impl.IAuthServiceImpl;
 
 import io.micrometer.common.lang.NonNull;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping(path = "/auth", produces = { MediaType.APPLICATION_JSON_VALUE })
 @RequiredArgsConstructor
 @Validated
-@Slf4j
 public class AuthController {
 
     @NonNull
@@ -53,8 +45,8 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-    @PostMapping("/verfiy/{userId}")
-    public ResponseEntity<?> verfiyUserWithOtp(
+    @PostMapping("/verify/{userId}")
+    public ResponseEntity<?> verifyUserWithOtp(
             @PathVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String userId)
             throws SchedulerException {
 
@@ -65,20 +57,17 @@ public class AuthController {
     }
 
     @PostMapping("/otp")
-    public ResponseEntity<ResponseDto> verfiyOtp(@Valid @RequestBody OtpCode otpCode) {
+    public ResponseEntity<?> verfiyOtp(@Valid @RequestBody OtpCode otpCode) {
 
-        authService.verfiyOtp(otpCode);
+        AuthenticationResponseDTO res = authService.verifyOtp(otpCode);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ResponseDto.builder()
-                        .statusCode(ResponseConstants.STATUS_200)
-                        .statusMsg(ResponseConstants.MESSAGE_200)
-                        .build());
+                .body(res);
     }
 
     @PostMapping("/set-password")
-    public ResponseEntity<ResponseDto> setPassword(@Valid @RequestBody PasswordDto passwordDto) {
+    public ResponseEntity<?> setPassword(@Valid @RequestBody PasswordDto passwordDto) {
         authService.setPassword(passwordDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)

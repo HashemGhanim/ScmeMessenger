@@ -18,9 +18,11 @@ import com.scme.messenger.services.IOTPService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class EmailJob extends QuartzJobBean {
 
     private final MailProperties mailProperties;
@@ -39,14 +41,15 @@ public class EmailJob extends QuartzJobBean {
         String userId = (String) jobDataMap.get("userId");
 
         try {
-            sendEmail(mailProperties.getUsername().toString(), email, username, MailContent.subject , userId);
+            sendEmail(mailProperties.getUsername().toString(), email, username, MailContent.subject, userId);
         } catch (MessagingException | SchedulerException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void sendEmail(String from, String to, String name, String subject, String userId) throws MessagingException, SchedulerException {
+    private void sendEmail(String from, String to, String name, String subject, String userId)
+            throws MessagingException, SchedulerException {
         MimeMessage mimeMessage = sender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.toString());
@@ -55,6 +58,8 @@ public class EmailJob extends QuartzJobBean {
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(MailContent.MAIL_CONTENT(name, otpService.generateOTP(userId)), true);
+
+        log.info(helper.toString());
 
         sender.send(mimeMessage);
     }

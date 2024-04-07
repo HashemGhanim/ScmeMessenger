@@ -15,8 +15,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class JwtService {
 
     @Value("${application.security.jwt.secret-key}")
@@ -24,6 +26,8 @@ public class JwtService {
 
     @Value("${application.security.jwt.expiration}")
     private long expiration;
+
+    public static int counter = 0;
 
     public String generateToken(UserDetails userDetails, HashMap<String, Object> extraClaim) {
         return Jwts.builder()
@@ -45,6 +49,8 @@ public class JwtService {
     }
 
     public String extractUsername(String token) {
+        counter++;
+        System.out.println(counter);
         return extractClaim(token, Claims::getSubject);
     }
 

@@ -25,11 +25,9 @@ import com.scme.messenger.repository.UserRepo;
 import com.scme.messenger.services.IEmailJobService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Service
-@Slf4j
 public class IEmailJobServiceImpl implements IEmailJobService {
 
     @Value("${zone.properties.zone-id}")
@@ -64,7 +62,7 @@ public class IEmailJobServiceImpl implements IEmailJobService {
                 .orElseThrow(() -> new BadRequestException(ResponseConstants.USER_NOT_FOUND));
 
         JobDataMap map = new JobDataMap();
-        map.put("userId" , userId);
+        map.put("userId", userId);
         map.put("userEmail", userEmail);
         map.put("userName", userName);
 

@@ -9,7 +9,7 @@ public interface IAuthService {
 
     AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request);
 
-    void verfiyOtp(OtpCode otpCode);
+    AuthenticationResponseDTO verifyOtp(OtpCode otpCode);
 
     void setPassword(PasswordDto password);
 }

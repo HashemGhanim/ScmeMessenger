@@ -46,24 +46,11 @@ public class IAuthServiceImpl implements IAuthService {
                         request.getUserId(),
                         request.getPassword()));
 
-        User user = userRepo.getReferenceById(request.getUserId());
-
-        UserDTO userDTO = UserMapper.convertUserToDTO(user, new UserDTO());
-
-        String token = jwtService.generateToken(user);
-
-        AuthenticationResponseDTO response = AuthenticationResponseDTO.builder()
-                .statusCode(ResponseConstants.STATUS_200)
-                .statusMsg(ResponseConstants.MESSAGE_200)
-                .token(token)
-                .user(userDTO)
-                .build();
-
-        return response;
+        return generateToken(request.getUserId());
     }
 
     @Override
-    public void verfiyOtp(OtpCode otpCode) {
+    public AuthenticationResponseDTO verifyOtp(OtpCode otpCode) {
 
         UserOtp userOtp = Optional.of(userOtpRepo.getReferenceById(otpCode.getUserId()))
                 .orElseThrow(() -> new BadRequestException(ResponseConstants.OTP_NOT_VALID));
@@ -73,6 +60,7 @@ public class IAuthServiceImpl implements IAuthService {
         if (!userOtpCode.getOtp().equals(otpCode.getOtp()))
             throw new BadRequestException(ResponseConstants.OTP_NOT_VALID);
 
+        return generateToken(otpCode.getUserId());
     }
 
     @Override
@@ -87,5 +75,22 @@ public class IAuthServiceImpl implements IAuthService {
         user.setPassword(passwordEncoder.encode(password.getPassword()));
 
         userRepo.save(user);
+    }
+
+    private AuthenticationResponseDTO generateToken(String userId) {
+        User user = userRepo.getReferenceById(userId);
+
+        UserDTO userDTO = UserMapper.convertUserToDTO(user, new UserDTO());
+
+        String token = jwtService.generateToken(user);
+
+        AuthenticationResponseDTO response = AuthenticationResponseDTO.builder()
+                .statusCode(ResponseConstants.STATUS_200)
+                .statusMsg(ResponseConstants.MESSAGE_200)
+                .token(token)
+                .user(userDTO)
+                .build();
+
+        return response;
     }
 }
