@@ -21,6 +21,8 @@
 	
 	<properties>
 		<java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 	
 	
@@ -150,7 +152,7 @@
     		<artifactId>json</artifactId>
 			<version>20240303</version>
 		</dependency>
-		
+
 	</dependencies>
 
 
@@ -161,6 +163,8 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<source>17</source>
+       				<target>17</target>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
