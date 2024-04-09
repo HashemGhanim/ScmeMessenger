@@ -44,12 +44,12 @@ public class IEmailJobServiceImpl implements IEmailJobService {
 
         ZonedDateTime dateTime = ZonedDateTime.of(localDateTime, ZoneId.of(zonoId));
 
-        dateTime = dateTime.plusSeconds(5);
-        if (dateTime.isBefore(ZonedDateTime.now())) {
-            log.info(dateTime.now().toString());
-            log.info(ZonedDateTime.now().toString());
-            return;
-        }
+        // dateTime = dateTime.plusSeconds(5);
+        // if (dateTime.isBefore(ZonedDateTime.now())) {
+        // log.info(dateTime.now().toString());
+        // log.info(ZonedDateTime.now().toString());
+        // return;
+        // }
 
         JobDetail jobDetail = jobDetail(userId);
         Trigger trigger = triggerBuilder(jobDetail, dateTime);
