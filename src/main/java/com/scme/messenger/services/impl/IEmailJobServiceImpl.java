@@ -48,7 +48,7 @@ public class IEmailJobServiceImpl implements IEmailJobService {
         if (dateTime.isBefore(ZonedDateTime.now())) {
             log.info(dateTime.now().toString());
             log.info(ZonedDateTime.now().toString());
-            return;
+            // return;
         }
 
         JobDetail jobDetail = jobDetail(userId);
@@ -82,7 +82,7 @@ public class IEmailJobServiceImpl implements IEmailJobService {
                 .forJob(jobDetail)
                 .withIdentity(jobDetail.getKey().getName(), "email-trigger")
                 .withSchedule(SimpleScheduleBuilder.simpleSchedule().withMisfireHandlingInstructionFireNow())
-                .startAt(Date.from(dateTime.toInstant()))
+                .startAt(Date.from(dateTime.plusMinutes(1).toInstant()))
                 .build();
     }
 }
