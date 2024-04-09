@@ -10,14 +10,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import static com.scme.messenger.constants.Permissions.*;
 
 @RequiredArgsConstructor
 public enum Role {
-	DOCTOR(
-			Set.of(
-					DOCTOR_SETTINGS,
-					DOCTOR_REJECT)),
+	DOCTOR(Collections.emptySet()),
 	STUDENT(Collections.emptySet());
 
 	@Getter
