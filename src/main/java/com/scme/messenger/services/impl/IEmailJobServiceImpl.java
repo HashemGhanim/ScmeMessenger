@@ -82,7 +82,7 @@ public class IEmailJobServiceImpl implements IEmailJobService {
                 .forJob(jobDetail)
                 .withIdentity(jobDetail.getKey().getName(), "email-trigger")
                 .withSchedule(SimpleScheduleBuilder.simpleSchedule().withMisfireHandlingInstructionFireNow())
-                .startAt(Date.from(dateTime.plusMinutes(1).toInstant()))
+                .startAt(Date.from(dateTime.plusSeconds(15).toInstant()))
                 .build();
     }
 }
