@@ -6,6 +6,8 @@ import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.UserOtpMapper;
 import com.scme.messenger.model.UserOtp;
 import com.scme.messenger.repository.UserOtpRepo;
+
+import org.quartz.SchedulerException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,10 +21,12 @@ import com.scme.messenger.mapper.UserMapper;
 import com.scme.messenger.model.User;
 import com.scme.messenger.repository.UserRepo;
 import com.scme.messenger.services.IAuthService;
+import com.scme.messenger.services.IEmailJobService;
 import com.scme.messenger.services.JwtService;
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -30,6 +34,8 @@ import java.util.Optional;
 public class IAuthServiceImpl implements IAuthService {
 
     private final AuthenticationManager authenticationManager;
+
+    private final IEmailJobService emailJobService;
 
     private final UserRepo userRepo;
 
@@ -40,11 +46,20 @@ public class IAuthServiceImpl implements IAuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
+    public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) throws SchedulerException {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUserId(),
                         request.getPassword()));
+
+        User user = userRepo.getReferenceById(request.getUserId());
+
+        if (user.isTwoStepVerify()) {
+
+            emailJobService.scheduleJobs(LocalDateTime.now(), request.getUserId());
+
+            return null;
+        }
 
         return generateToken(request.getUserId());
     }

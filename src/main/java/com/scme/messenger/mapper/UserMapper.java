@@ -1,5 +1,6 @@
 package com.scme.messenger.mapper;
 
+import com.scme.messenger.constants.Role;
 import com.scme.messenger.dto.userdto.UserDTO;
 import com.scme.messenger.model.User;
 
@@ -10,6 +11,11 @@ public class UserMapper {
         userDTO.setName(user.getName());
         userDTO.setEmail(user.getEmail());
 
+        if(user.getRole() == Role.DOCTOR)
+            userDTO.setRole(1);
+        else
+            userDTO.setRole(0);
+
         return userDTO;
     }
 
@@ -17,6 +23,12 @@ public class UserMapper {
         user.setUserId(userDTO.getUserId());
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
+
+        if(userDTO.getRole() == 1)
+            user.setRole(Role.DOCTOR);
+        else
+            user.setRole(Role.STUDENT);
+
         return user;
     }
 }

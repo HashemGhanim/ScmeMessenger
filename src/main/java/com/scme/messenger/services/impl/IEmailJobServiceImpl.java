@@ -25,11 +25,9 @@ import com.scme.messenger.repository.UserRepo;
 import com.scme.messenger.services.IEmailJobService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Service
-@Slf4j
 public class IEmailJobServiceImpl implements IEmailJobService {
 
     @Value("${zone.properties.zone-id}")
@@ -43,13 +41,6 @@ public class IEmailJobServiceImpl implements IEmailJobService {
     public void scheduleJobs(LocalDateTime localDateTime, String userId) throws SchedulerException {
 
         ZonedDateTime dateTime = ZonedDateTime.of(localDateTime, ZoneId.of(zonoId));
-
-        dateTime = dateTime.plusMinutes(1);
-        if (dateTime.isBefore(ZonedDateTime.now())) {
-            log.info(dateTime.now().toString());
-            log.info(ZonedDateTime.now().toString());
-            // return;
-        }
 
         JobDetail jobDetail = jobDetail(userId);
         Trigger trigger = triggerBuilder(jobDetail, dateTime);

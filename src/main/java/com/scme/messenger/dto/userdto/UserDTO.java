@@ -1,15 +1,19 @@
 package com.scme.messenger.dto.userdto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+
+@Schema(
+        name = "User Response",
+        description = "Schema to hold user response information"
+)
 @Getter
 @Setter
 @Builder
@@ -26,5 +30,11 @@ public class UserDTO {
 
     @Email(message = "Email address should be a valid value")
     private String email;
+
+    @Schema(
+            description = "Role of the user if 1 is DOCTOR if 0 is STUDENT"
+    )
+    @NotNull(message = "Role can not be a null or empty")
+    private Integer role;
 
 }

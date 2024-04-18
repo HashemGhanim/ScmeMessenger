@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -38,8 +38,10 @@ public class SecurityConfig {
 
         http.csrf()
                 .disable()
-                .authorizeRequests()
-                .requestMatchers("/auth/login").permitAll()
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/user/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/image/**").permitAll()
                 .requestMatchers("/auth/verify/**").permitAll()
                 .requestMatchers("/auth/otp").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()

@@ -4,7 +4,6 @@ com/scme/messenger/dto/authenticationdto/PasswordDto.class
 com/scme/messenger/model/Chat$ChatBuilder.class
 com/scme/messenger/model/Course.class
 com/scme/messenger/filter/JwtAuthenticationFilter.class
-com/scme/messenger/model/Department.class
 com/scme/messenger/model/UserOtp.class
 com/scme/messenger/dto/ResponseDto$ResponseDtoBuilder.class
 com/scme/messenger/model/User$UserBuilder.class
@@ -58,7 +57,6 @@ com/scme/messenger/model/GroupMessage.class
 com/scme/messenger/model/Module$ModuleBuilder.class
 com/scme/messenger/config/AuditAwareImpl.class
 com/scme/messenger/config/ApplicationConfig$2.class
-com/scme/messenger/model/Department$DepartmentBuilder.class
 com/scme/messenger/dto/userdto/UserDTO$UserDTOBuilder.class
 com/scme/messenger/model/Chat.class
 com/scme/messenger/mapper/UserOtpMapper.class

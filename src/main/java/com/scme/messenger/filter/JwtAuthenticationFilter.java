@@ -10,7 +10,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.scme.messenger.services.JwtService;
 
-import io.micrometer.common.lang.NonNull;
 
 import java.io.IOException;
 import jakarta.servlet.FilterChain;
@@ -23,10 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @NonNull
     private final JwtService jwtService;
-
-    @NonNull
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -35,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
-        if (request.getServletPath().startsWith("/api/v1/auth/login")) {
+        if (request.getServletPath().startsWith("/auth/login")) {
             filterChain.doFilter(request, response);
             return;
         }

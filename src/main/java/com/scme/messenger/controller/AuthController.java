@@ -19,7 +19,6 @@ import com.scme.messenger.dto.authenticationdto.AuthenticationRequestDTO;
 import com.scme.messenger.services.IAuthService;
 import com.scme.messenger.services.IEmailJobService;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -34,14 +33,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Validated
 public class AuthController {
 
-    @NonNull
     private final IAuthService authService;
 
     private final IEmailJobService emailJobService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody AuthenticationRequestDTO request) {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthenticationRequestDTO request) throws SchedulerException {
+
         AuthenticationResponseDTO res = authService.authenticate(request);
+
+        if (res == null)
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ResponseDto.builder()
+                            .statusCode(ResponseConstants.STATUS_200)
+                            .statusMsg(ResponseConstants.MESSAGE_200)
+                            .build());
+
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 

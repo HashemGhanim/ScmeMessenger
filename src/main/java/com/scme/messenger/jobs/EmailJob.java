@@ -18,11 +18,9 @@ import com.scme.messenger.services.IOTPService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Component
-@Slf4j
 public class EmailJob extends QuartzJobBean {
 
     private final MailProperties mailProperties;
@@ -58,8 +56,6 @@ public class EmailJob extends QuartzJobBean {
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(MailContent.MAIL_CONTENT(name, otpService.generateOTP(userId)), true);
-
-        log.info(helper.toString());
 
         sender.send(mimeMessage);
     }

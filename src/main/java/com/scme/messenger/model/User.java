@@ -3,28 +3,15 @@ package com.scme.messenger.model;
 import java.util.Collection;
 import java.util.Set;
 
+import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.scme.messenger.constants.Role;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+@ToString
 @Getter
 @Setter
 @Builder
@@ -34,29 +21,28 @@ import lombok.Setter;
 @Table(name = "user_table")
 public class User extends BaseEntity implements UserDetails {
 
-	// Attributes
 	@Id
 	@Column(name = "user_id")
 	private String userId;
 
 	private String name;
 
+	@Column(unique = true)
 	private String email;
 
 	private String password;
 
+	private boolean twoStepVerify = false;
+
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	// This attribute will be ignored
-	@JsonIgnore
-	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-	private Department department;
+	@OneToOne(mappedBy = "user")
+	private Image image;
 
 	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
 	private Set<Course> courses;
 
-	// This attribute will be ignored
 	@JsonIgnore
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private Set<GroupMessage> groupMessages;
@@ -74,8 +60,6 @@ public class User extends BaseEntity implements UserDetails {
 	@JsonIgnore
 	@OneToMany(mappedBy = "recepientMessage")
 	private Set<ChatMessage> rMessages;
-
-	// Methods
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
