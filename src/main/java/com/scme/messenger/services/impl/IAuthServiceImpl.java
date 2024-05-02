@@ -2,11 +2,16 @@ package com.scme.messenger.services.impl;
 
 import com.scme.messenger.dto.authenticationdto.OtpCode;
 import com.scme.messenger.dto.authenticationdto.PasswordDto;
+import com.scme.messenger.encryption.IRSAKeysGenerator;
+import com.scme.messenger.encryption.util.KeyPairUtil;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.UserOtpMapper;
+import com.scme.messenger.model.KeyPair;
 import com.scme.messenger.model.UserOtp;
+import com.scme.messenger.repository.KeyPairRepo;
 import com.scme.messenger.repository.UserOtpRepo;
 
+import com.scme.messenger.services.IKeyPairService;
 import org.quartz.SchedulerException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +28,7 @@ import com.scme.messenger.repository.UserRepo;
 import com.scme.messenger.services.IAuthService;
 import com.scme.messenger.services.IEmailJobService;
 import com.scme.messenger.services.JwtService;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,6 +51,8 @@ public class IAuthServiceImpl implements IAuthService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final IKeyPairService iKeyPairService;
+
     @Override
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) throws SchedulerException {
         authenticationManager.authenticate(
@@ -57,7 +65,6 @@ public class IAuthServiceImpl implements IAuthService {
         if (user.isTwoStepVerify()) {
 
             emailJobService.scheduleJobs(LocalDateTime.now(), request.getUserId());
-
             return null;
         }
 
@@ -88,6 +95,13 @@ public class IAuthServiceImpl implements IAuthService {
                 .orElseThrow(() -> new BadRequestException(ResponseConstants.USER_NOT_FOUND));
 
         user.setPassword(passwordEncoder.encode(password.getPassword()));
+
+        user.setRegistered(true);
+
+        // Generate a public and private key and save them in database
+        KeyPair keyPair = iKeyPairService.save(user);
+
+        user.setKeyPair(keyPair);
 
         userRepo.save(user);
     }

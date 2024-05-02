@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.Optional;
 
 import org.apache.coyote.BadRequestException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,12 +19,24 @@ public class IImageServiceImpl implements IImageService {
 
     private final ImageRepo imageRepo;
 
+    @Value("${image.max.size.file}")
+    private long maxFileSize;
+
     @Override
     public void setImage(MultipartFile file, String id) throws Exception {
-        Image image = Image.builder().id(id).mime_type(file.getContentType()).filename(file.getOriginalFilename())
-                .data(file.getBytes()).build();
+        String contentType = file.getContentType();
+        long size = file.getSize();
 
-        imageRepo.save(image);
+        if(contentType != null && contentType.startsWith("image/") && size <= maxFileSize){
+
+            Image image = Image.builder().id(id).mime_type(file.getContentType()).filename(file.getOriginalFilename())
+                    .data(file.getBytes()).build();
+
+            imageRepo.save(image);
+
+        }else{
+            throw new BadRequestException(ResponseConstants.IMAGE_SIZE_LIMIT);
+        }
 
         return;
     }

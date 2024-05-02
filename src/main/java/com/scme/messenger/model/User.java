@@ -1,6 +1,7 @@
 package com.scme.messenger.model;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -34,13 +35,32 @@ public class User extends BaseEntity implements UserDetails {
 
 	private boolean twoStepVerify = false;
 
+	private boolean registered = false;
+
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
+	@JsonIgnore
 	@OneToOne(mappedBy = "user")
+	private KeyPair keyPair;
+
+	@JsonIgnore
+	@ManyToMany(cascade = CascadeType.ALL , mappedBy = "blocked")
+	private Set<User> blocks = new HashSet<>();
+
+	@JsonIgnore
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "user_blocks",
+			joinColumns = {@JoinColumn(name = "recepinet_id")},
+			inverseJoinColumns = {@JoinColumn(name = "sender_id")}
+	)
+	private Set<User> blocked = new HashSet<>();
+
+	@OneToOne(mappedBy = "user" , cascade = CascadeType.ALL , orphanRemoval = true)
 	private Image image;
 
-	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
 	private Set<Course> courses;
 
 	@JsonIgnore
@@ -54,12 +74,20 @@ public class User extends BaseEntity implements UserDetails {
 	private Set<Chat> rChats;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "senderMessage")
-	private Set<ChatMessage> sMessages;
+	@OneToMany(mappedBy = "firstSenderUser")
+	private Set<ChatMessage> firstSenderMessages;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "recepientMessage")
-	private Set<ChatMessage> rMessages;
+	@OneToMany(mappedBy = "firstRecepientUser")
+	private Set<ChatMessage> firstRecepientMessages;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "secondSenderUser")
+	private Set<ChatMessage> secondSenderMessages;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "secondRecepientUser")
+	private Set<ChatMessage> secondRecepientMessages;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

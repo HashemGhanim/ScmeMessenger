@@ -4,25 +4,19 @@ import java.util.Set;
 
 import java.io.Serializable;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.scme.messenger.model.composite.CourseID;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
@@ -44,7 +38,7 @@ public class Course extends BaseEntity implements Serializable {
     private String imagePath;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "course_user", joinColumns = {
             @JoinColumn(name = "course_id"),
             @JoinColumn(name = "module_id")
@@ -57,7 +51,7 @@ public class Course extends BaseEntity implements Serializable {
     private Module module;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)
     private Set<GroupMessage> groupMessages;
 
 }

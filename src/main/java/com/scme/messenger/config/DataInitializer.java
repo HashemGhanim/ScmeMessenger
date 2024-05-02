@@ -33,6 +33,7 @@ public class DataInitializer implements CommandLineRunner {
                 .userId("20201102")
                 .password(passwordEncoder.encode("Hh@123456"))
                 .role(Role.DOCTOR)
+                .registered(true)
                 .build();
 
         userRepo.save(user1);

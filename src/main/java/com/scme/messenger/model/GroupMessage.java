@@ -1,21 +1,19 @@
 package com.scme.messenger.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.scme.messenger.model.composite.GroupMessageID;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;;
 
 @Getter
 @Setter
@@ -41,5 +39,8 @@ public class GroupMessage extends BaseEntity implements Serializable {
             @JoinColumn(name = "module_id", referencedColumnName = "module_id", insertable = false, updatable = false)
     })
     private Course course;
+
+    private String content;
+    private Date timestamp;
 
 }

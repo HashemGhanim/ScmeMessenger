@@ -1,4 +1,16 @@
 
+-- DROP TABLE IF EXISTS QRTZ_FIRED_TRIGGERS cascade ;
+-- DROP TABLE IF EXISTS QRTZ_PAUSED_TRIGGER_GRPS cascade ;
+-- DROP TABLE IF EXISTS QRTZ_SCHEDULER_STATE cascade;
+-- DROP TABLE IF EXISTS QRTZ_LOCKS cascade;
+-- DROP TABLE IF EXISTS QRTZ_SIMPLE_TRIGGERS cascade;
+-- DROP TABLE IF EXISTS QRTZ_SIMPROP_TRIGGERS cascade;
+-- DROP TABLE IF EXISTS QRTZ_CRON_TRIGGERS cascade;
+-- DROP TABLE IF EXISTS QRTZ_BLOB_TRIGGERS cascade;
+-- DROP TABLE IF EXISTS QRTZ_TRIGGERS cascade;
+-- DROP TABLE IF EXISTS QRTZ_JOB_DETAILS cascade;
+-- DROP TABLE IF EXISTS QRTZ_CALENDARS cascade;
+
 drop table if exists user_table cascade;
 drop table if exists module_table cascade;
 drop table if exists course cascade;
@@ -95,6 +107,8 @@ CREATE TABLE IF NOT EXISTS chat_message(
 	chat_id uuid NOT NULL,
 	sender_id varchar(100)  NOT NULL,
     recepient_id varchar(100) NOT NULL,
+    content varchar(255) NOT NULL,
+    timestamp date,
     created_at date NOT NULL,
 	created_by varchar(20) NOT NULL,
 	updated_at date DEFAULT NULL,
@@ -109,6 +123,8 @@ CREATE TABLE IF NOT EXISTS group_message(
     course_id varchar(100) NOT NULL,
     module_id varchar(100) NOT NULL,
     sender_id varchar(100)  NOT NULL,
+    content varchar(255) NOT NULL,
+    timestamp date,
     created_at date NOT NULL,
 	created_by varchar(20) NOT NULL,
 	updated_at date DEFAULT NULL,

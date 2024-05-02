@@ -1,6 +1,7 @@
 package com.scme.messenger.services.impl;
 
 import com.scme.messenger.constants.ResponseConstants;
+import com.scme.messenger.dto.userdto.BlockUserDto;
 import com.scme.messenger.dto.userdto.UserDTO;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.UserMapper;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -85,6 +88,53 @@ public class IUserServiceImpl implements IUserService {
         userRepo.save(user);
 
         return true;
+    }
+
+    @Override
+    public boolean blockUser(BlockUserDto blockUserDto) {
+
+        User user = userRepo.getReferenceById(blockUserDto.getSenderId());
+        User blockedUser = userRepo.getReferenceById(blockUserDto.getRecepientId());
+
+        user.getBlocks().add(blockedUser);
+        blockedUser.getBlocked().add(user);
+
+        userRepo.save(user);
+        userRepo.save(blockedUser);
+
+        return true;
+    }
+
+    @Override
+    public boolean unBlockUser(BlockUserDto blockUserDto) {
+
+        User user = userRepo.getReferenceById(blockUserDto.getSenderId());
+        User blockedUser = userRepo.getReferenceById(blockUserDto.getRecepientId());
+
+        user.getBlocks().remove(blockedUser);
+        blockedUser.getBlocked().remove(user);
+
+        userRepo.save(user);
+        userRepo.save(blockedUser);
+
+        return true;
+    }
+
+    @Override
+    public Set<UserDTO> searchUsers(String username , String userId) {
+
+        Set<User> users = userRepo.findUserByPartOfName(username);
+        User currentUser = userRepo.getReferenceById(userId);
+
+        Set<User> filteredUsers = users.stream()
+                .filter(user -> !currentUser.getBlocks().contains(user))
+                .collect(Collectors.toSet());
+
+        Set<UserDTO> finalUsers = filteredUsers.stream()
+                .map(user -> UserMapper.convertUserToDTO(user , new UserDTO()))
+                .collect(Collectors.toSet());
+
+        return finalUsers;
     }
 
 }

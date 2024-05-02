@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum Role {
+	ADMIN(Collections.emptySet()),
 	DOCTOR(Collections.emptySet()),
 	STUDENT(Collections.emptySet());
 

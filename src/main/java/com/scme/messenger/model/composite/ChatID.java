@@ -7,13 +7,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
@@ -21,7 +19,7 @@ public class ChatID implements Serializable {
 
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "chat_id")
-    private UUID charId;
+    private UUID chatId;
 
     @Column(name = "sender_id")
     private String senderId;

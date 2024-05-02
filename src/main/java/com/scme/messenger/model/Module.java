@@ -1,10 +1,6 @@
 package com.scme.messenger.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +22,7 @@ public class Module extends BaseEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "module")
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL , orphanRemoval = true)
     private Set<Course> courses;
 
 }
