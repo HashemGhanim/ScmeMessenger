@@ -58,6 +58,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 
 
+
                 assert accessor != null;
 
                 if(StompCommand.CONNECT.equals(accessor.getCommand())){
@@ -66,14 +67,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     assert authorizationHeader != null;
                     String token = authorizationHeader.substring(7);
 
+                    log.info(token);
 
                     String userId = jwtService.extractUsername(token);
                     UserDetails user = userDetailsService.loadUserByUsername(userId);
 
-                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null , user.getAuthorities());
-                        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null , user.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
-                        accessor.setUser(usernamePasswordAuthenticationToken);
+                    accessor.setUser(usernamePasswordAuthenticationToken);
                 }
                 return message;
             }

@@ -68,6 +68,7 @@ public class ChatMessageMapper {
                     .recepientId(chatMessage.getSecondSenderId())
                     .content(chatMessage.getContent())
                     .timestamp(chatMessage.getTimestamp())
+                    .seen(chatMessage.isSeen())
                     .build();
 
         return ChatMessageResponseDto.builder()
@@ -77,6 +78,7 @@ public class ChatMessageMapper {
                 .recepientId(chatMessage.getFirstRecepientId())
                 .content(chatMessage.getContent())
                 .timestamp(chatMessage.getTimestamp())
+                .seen(chatMessage.isSeen())
                 .build();
     }
 

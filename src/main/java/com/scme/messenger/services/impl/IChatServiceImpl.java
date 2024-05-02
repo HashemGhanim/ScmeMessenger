@@ -86,6 +86,7 @@ public class IChatServiceImpl implements IChatService {
 
         long maxSize = (long) Math.ceil(Math.max(size , messages.size()) * 1.0 / limitOfMessages * 1.0);
 
+
         return ChatResponseDto.builder()
                 .chatId(chat.getChatID().getChatId())
                 .senderId(chat.getChatID().getSenderId())

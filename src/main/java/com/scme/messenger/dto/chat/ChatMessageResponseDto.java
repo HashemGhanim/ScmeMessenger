@@ -19,4 +19,5 @@ public class ChatMessageResponseDto {
     private String recepientId;
     private String content;
     private Date timestamp;
+    private boolean seen;
 }
