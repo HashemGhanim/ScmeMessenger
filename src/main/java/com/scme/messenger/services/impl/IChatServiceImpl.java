@@ -109,7 +109,7 @@ public class IChatServiceImpl implements IChatService {
         return ChatResponseDto.builder()
                 .chatId(chat.getChatID().getChatId())
                 .senderId(chat.getChatID().getSenderId())
-                .recepientId(chat.getChatID().getRecepientId())
+                .recepient(UserMapper.convertUserToDTO(chat.getRecepient(), new UserDTO()))
                 .messages(Stream.concat(senderMessages.stream() , recepientMessages.stream())
                         .sorted(Comparator.comparing(ChatMessage::getTimestamp).reversed())
                         .skip(page * limitOfMessages)

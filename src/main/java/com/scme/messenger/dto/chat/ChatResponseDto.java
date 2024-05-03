@@ -1,5 +1,6 @@
 package com.scme.messenger.dto.chat;
 
+import com.scme.messenger.dto.userdto.UserDTO;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
@@ -15,7 +16,7 @@ import java.util.UUID;
 public class ChatResponseDto {
     private UUID chatId;
     private String senderId;
-    private String recepientId;
+    private UserDTO recepient;
     private List<ChatMessageResponseDto> messages;
     private boolean blocked;
     private boolean block;
