@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -42,7 +43,7 @@ public class ChatController {
     }
 
     @DeleteMapping
-//    @PreAuthorize("#chatDto.senderId == authentication.principal.username")
+    @PreAuthorize("#chatDto.senderId == authentication.principal.username")
     public ResponseEntity<?> delete(@Valid @RequestBody ChatDto chatDto){
 
         iChatService.delete(chatDto);
@@ -55,7 +56,7 @@ public class ChatController {
     }
 
     @GetMapping("/{senderId}/{recepientId}")
-//    @PreAuthorize("#senderId == authentication.principal.username")
+    @PreAuthorize("#senderId == authentication.principal.username")
     public ResponseEntity<?> getChat(
             @PathVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String senderId,
             @PathVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String recepientId,
@@ -67,5 +68,15 @@ public class ChatController {
                 .body(chatDto);
     }
 
+    @GetMapping("/{senderId}")
+    @PreAuthorize("#senderId == authentication.principal.username")
+    public ResponseEntity<?> getAllChats(
+            @PathVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String senderId
+    ){
+        List<ChatResponseDto> messages = iChatService.getAllChats(senderId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(messages);
+    }
 
 }

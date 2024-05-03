@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface ChatRepo extends JpaRepository<Chat , ChatID> {
@@ -15,4 +17,7 @@ public interface ChatRepo extends JpaRepository<Chat , ChatID> {
 
     @Query("SELECT c from Chat c where c.chatID.senderId=?1 and c.chatID.recepientId=?2")
     Chat findChatBySenderAndRecepient(String senderId , String recepientId);
+
+    @Query("SELECT c FROM Chat c WHERE c.chatID.senderId=?1")
+    List<Chat> findAllBySenderId(String senderId);
 }

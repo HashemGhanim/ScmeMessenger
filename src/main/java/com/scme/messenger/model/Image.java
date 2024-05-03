@@ -27,6 +27,8 @@ public class Image extends BaseEntity{
 
     private String mime_type;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
     private byte[] data;
 
     @OneToOne

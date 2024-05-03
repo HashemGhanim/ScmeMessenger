@@ -14,7 +14,6 @@ import com.scme.messenger.repository.ChatRepo;
 import com.scme.messenger.services.IChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.xml.ValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,7 @@ public class IChatServiceImpl implements IChatService {
     private final ChatMapper chatMapper;
 
     @Value("${messages.limit}")
-    private long limitOfMessages;
+    private int limitOfMessages;
 
     @Override
     public void create(ChatDto chatDto) {
@@ -72,10 +71,26 @@ public class IChatServiceImpl implements IChatService {
     }
 
     @Override
-    public ChatResponseDto getChat(String senderId, String recepientId , int page , int size) {
+    public ChatResponseDto getChat(String senderId, String recepientId , int page, int size) {
 
         Chat chat = Optional.of(chatRepo.findChatBySenderAndRecepient(senderId,recepientId)).orElseThrow(()-> new BadRequestException(ResponseConstants.CHAT_NOT_FOUND));
 
+        return chatResponseDto(chat , page , size);
+    }
+
+    @Override
+    public List<ChatResponseDto> getAllChats(String senderId) {
+        List<Chat> chats  = chatRepo.findAllBySenderId(senderId);
+
+        List<ChatResponseDto> listOfMessages = chats.stream()
+                .map(chat -> chatResponseDto(chat , 0 , limitOfMessages))
+                .collect(Collectors.toList());
+
+        return listOfMessages;
+    }
+
+
+    private ChatResponseDto chatResponseDto(Chat chat , int page , int size){
         Set<ChatMessage> senderMessages = chat.getSenderChatMessages();
         Set<ChatMessage> recepientMessages = chat.getRecepientChatMessages();
 

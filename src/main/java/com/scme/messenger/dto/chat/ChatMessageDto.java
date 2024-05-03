@@ -22,4 +22,5 @@ public class ChatMessageDto {
     private String content;
 
     private Date timestamp;
+
 }

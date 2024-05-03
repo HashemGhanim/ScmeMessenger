@@ -32,7 +32,7 @@ public class DataInitializer implements CommandLineRunner {
                 .name("Mahmmod")
                 .userId("20201102")
                 .password(passwordEncoder.encode("Hh@123456"))
-                .role(Role.DOCTOR)
+                .role(Role.ADMIN)
                 .registered(true)
                 .build();
 
