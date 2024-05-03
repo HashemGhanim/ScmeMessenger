@@ -2,10 +2,14 @@ package com.scme.messenger.services.impl;
 
 import com.scme.messenger.constants.ResponseConstants;
 import com.scme.messenger.dto.chat.ChatDto;
+import com.scme.messenger.dto.chat.ChatMessageResponseDto;
+import com.scme.messenger.dto.chat.ChatPreviewResponseDto;
 import com.scme.messenger.dto.chat.ChatResponseDto;
+import com.scme.messenger.dto.userdto.UserDTO;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.ChatMapper;
 import com.scme.messenger.mapper.ChatMessageMapper;
+import com.scme.messenger.mapper.UserMapper;
 import com.scme.messenger.model.Chat;
 import com.scme.messenger.model.ChatMessage;
 import com.scme.messenger.model.composite.ChatID;
@@ -79,11 +83,11 @@ public class IChatServiceImpl implements IChatService {
     }
 
     @Override
-    public List<ChatResponseDto> getAllChats(String senderId) {
+    public List<ChatPreviewResponseDto> getAllChats(String senderId) {
         List<Chat> chats  = chatRepo.findAllBySenderId(senderId);
 
-        List<ChatResponseDto> listOfMessages = chats.stream()
-                .map(chat -> chatResponseDto(chat , 0 , limitOfMessages))
+        List<ChatPreviewResponseDto> listOfMessages = chats.stream()
+                .map(chat -> chatPreviewResponseDto(chat))
                 .collect(Collectors.toList());
 
         return listOfMessages;
@@ -117,4 +121,30 @@ public class IChatServiceImpl implements IChatService {
                 .build();
     }
 
+    private ChatPreviewResponseDto chatPreviewResponseDto(Chat chat){
+        Set<ChatMessage> sMessages = chat.getSenderChatMessages();
+        Set<ChatMessage> rMessages = chat.getRecepientChatMessages();
+
+        List<ChatMessage> messages = rMessages.stream()
+                .sorted(Comparator.comparing(ChatMessage::getTimestamp).reversed())
+                .takeWhile(chatMessage -> !chatMessage.isSeen())
+                .collect(Collectors.toList());
+
+
+        List<ChatMessageResponseDto> lastMessage = Stream.concat(sMessages.stream() , rMessages.stream())
+                .sorted(Comparator.comparing(ChatMessage::getTimestamp).reversed())
+                .skip(0)
+                .limit(1)
+                .map(chatMessage -> chatMessageMapper.convertToChatMessageResponseDto(chatMessage))
+                .collect(Collectors.toList());
+
+        return ChatPreviewResponseDto.builder()
+                .chatId(chat.getChatID().getChatId())
+                .recepient(UserMapper.convertUserToDTO(chat.getRecepient() , new UserDTO()))
+                .lastMessage(lastMessage.size() > 0 ? lastMessage.get(0) : null)
+                .numberOfUnseenMessages(messages.size())
+                .block(chat.getSender().getBlocks().contains(chat.getRecepient()))
+                .blocked(chat.getSender().getBlocked().contains(chat.getRecepient()))
+                .build();
+    }
 }

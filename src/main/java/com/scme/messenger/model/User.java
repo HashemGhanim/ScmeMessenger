@@ -37,6 +37,7 @@ public class User extends BaseEntity implements UserDetails {
 
 	private boolean registered = false;
 
+	@Column(updatable = false)
 	@Enumerated(EnumType.STRING)
 	private Role role;
 

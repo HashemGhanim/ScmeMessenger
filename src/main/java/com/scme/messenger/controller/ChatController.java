@@ -3,6 +3,7 @@ package com.scme.messenger.controller;
 import com.scme.messenger.constants.ResponseConstants;
 import com.scme.messenger.dto.ResponseDto;
 import com.scme.messenger.dto.chat.ChatDto;
+import com.scme.messenger.dto.chat.ChatPreviewResponseDto;
 import com.scme.messenger.dto.chat.ChatResponseDto;
 import com.scme.messenger.services.IChatService;
 import jakarta.validation.Valid;
@@ -73,7 +74,7 @@ public class ChatController {
     public ResponseEntity<?> getAllChats(
             @PathVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String senderId
     ){
-        List<ChatResponseDto> messages = iChatService.getAllChats(senderId);
+        List<ChatPreviewResponseDto> messages = iChatService.getAllChats(senderId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(messages);

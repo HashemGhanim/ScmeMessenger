@@ -1,22 +1,20 @@
 package com.scme.messenger.model;
 
+import com.scme.messenger.validations.UUID;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.UUID;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class Attachment {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
 
     private String filename;
 
@@ -26,7 +24,7 @@ public class Attachment {
     @Basic(fetch = FetchType.LAZY)
     private byte[] data;
 
-    @ManyToOne
-    @JoinColumn(name = "message_id")
+    @OneToOne
+    @JoinColumn(name = "message_id", referencedColumnName = "message_id")
     private ChatMessage chatMessage;
 }

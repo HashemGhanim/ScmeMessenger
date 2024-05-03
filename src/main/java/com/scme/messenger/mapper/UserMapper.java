@@ -11,7 +11,9 @@ public class UserMapper {
         userDTO.setName(user.getName());
         userDTO.setEmail(user.getEmail());
 
-        if(user.getRole() == Role.DOCTOR)
+        if(user.getRole() == Role.ADMIN)
+            userDTO.setRole(2);
+        else if(user.getRole() == Role.DOCTOR)
             userDTO.setRole(1);
         else
             userDTO.setRole(0);
@@ -24,7 +26,9 @@ public class UserMapper {
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
 
-        if(userDTO.getRole() == 1)
+        if(userDTO.getRole() == 2)
+            user.setRole(Role.ADMIN);
+        else if(userDTO.getRole() == 1)
             user.setRole(Role.DOCTOR);
         else
             user.setRole(Role.STUDENT);

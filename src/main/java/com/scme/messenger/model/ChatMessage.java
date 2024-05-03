@@ -2,7 +2,6 @@ package com.scme.messenger.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -92,6 +91,14 @@ public class ChatMessage extends BaseEntity implements Serializable {
     private String content;
     private Date timestamp;
 
-    @OneToMany(mappedBy = "chatMessage", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Attachment> attachments;
+    @OneToOne(mappedBy = "chatMessage", cascade = CascadeType.ALL , orphanRemoval = true)
+    private Attachment attachment;
+
+    @PrePersist
+    @PreUpdate
+    private void validate(){
+        if(content == null && attachment == null){
+            throw new IllegalStateException("Either content or attachment must be provided.");
+        }
+    }
 }
