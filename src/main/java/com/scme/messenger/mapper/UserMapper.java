@@ -2,6 +2,7 @@ package com.scme.messenger.mapper;
 
 import com.scme.messenger.constants.Role;
 import com.scme.messenger.dto.userdto.UserDTO;
+import com.scme.messenger.encryption.util.PublicKey;
 import com.scme.messenger.model.User;
 
 public class UserMapper {
@@ -10,7 +11,11 @@ public class UserMapper {
         userDTO.setUserId(user.getUserId());
         userDTO.setName(user.getName());
         userDTO.setEmail(user.getEmail());
-
+        userDTO.setPublicKey(PublicKey.builder()
+                        .e(user.getKeyPair().getPublicKey())
+                        .n(user.getKeyPair().getMod())
+                .build());
+        
         if(user.getRole() == Role.ADMIN)
             userDTO.setRole(2);
         else if(user.getRole() == Role.DOCTOR)

@@ -2,6 +2,7 @@ package com.scme.messenger.mapper;
 
 import com.scme.messenger.dto.chat.ChatMessageDto;
 import com.scme.messenger.dto.chat.ChatMessageResponseDto;
+import com.scme.messenger.model.Attachment;
 import com.scme.messenger.model.Chat;
 import com.scme.messenger.model.ChatMessage;
 import com.scme.messenger.model.composite.ChatID;
@@ -31,6 +32,12 @@ public class ChatMessageMapper {
                 .senderId(senderId)
                 .build());
 
+        Attachment attachment = Attachment.builder()
+                .filename(chatMessageDto.getFilename())
+                .mime_type(chatMessageDto.getMime_type())
+                .data(chatMessageDto.getData())
+                .build();
+
         Chat recipientChat = chatRepo.findChatBySenderAndRecepient(recepientId, senderId);
 
         c.setFirstChat(senderChat);
@@ -47,6 +54,8 @@ public class ChatMessageMapper {
         c.setContent(chatMessageDto.getContent());
         c.setTimestamp(chatMessageDto.getTimestamp());
 
+        c.setAttachment(attachment);
+
         return c;
     }
 
@@ -56,6 +65,9 @@ public class ChatMessageMapper {
                 .chatId(chatMessage.getFirstChatId())
                 .content(chatMessage.getContent())
                 .timestamp(chatMessage.getTimestamp())
+                .filename(chatMessage.getAttachment().getFilename())
+                .mime_type(chatMessage.getAttachment().getMime_type())
+                .data(chatMessage.getAttachment().getData())
                 .build();
     }
 
@@ -69,6 +81,9 @@ public class ChatMessageMapper {
                     .content(chatMessage.getContent())
                     .timestamp(chatMessage.getTimestamp())
                     .seen(chatMessage.isSeen())
+                    .filename(chatMessage.getAttachment().getFilename())
+                    .data(chatMessage.getAttachment().getData())
+                    .mime_type(chatMessage.getAttachment().getMime_type())
                     .build();
 
         return ChatMessageResponseDto.builder()
@@ -79,6 +94,9 @@ public class ChatMessageMapper {
                 .content(chatMessage.getContent())
                 .timestamp(chatMessage.getTimestamp())
                 .seen(chatMessage.isSeen())
+                .filename(chatMessage.getAttachment().getFilename())
+                .data(chatMessage.getAttachment().getData())
+                .mime_type(chatMessage.getAttachment().getMime_type())
                 .build();
     }
 

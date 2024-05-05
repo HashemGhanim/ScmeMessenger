@@ -25,6 +25,6 @@ public interface ChatMessageRepo extends JpaRepository<ChatMessage , UUID> {
     void deleteUnFoundMessages();
 
     @Modifying
-    @Query("UPDATE ChatMessage m SET m.seen = true WHERE m.messageId IN :ids")
-    void markAsSeen(@Param("ids")List<UUID> messageIds);
+    @Query("UPDATE ChatMessage m SET m.seen = true WHERE m.secondChatId = ?1 and m.secondSenderId =?2")
+    void markAsSeen(UUID chatId , String senderId);
 }

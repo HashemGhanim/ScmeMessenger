@@ -5,6 +5,7 @@ import com.scme.messenger.dto.ResponseDto;
 import com.scme.messenger.dto.chat.ChatDto;
 import com.scme.messenger.dto.chat.ChatPreviewResponseDto;
 import com.scme.messenger.dto.chat.ChatResponseDto;
+import com.scme.messenger.dto.chat.MarkSeenRequest;
 import com.scme.messenger.services.IChatService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -81,3 +82,4 @@ public class ChatController {
     }
 
 }
+

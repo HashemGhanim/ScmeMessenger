@@ -20,9 +20,8 @@ public class Attachment {
 
     private String mime_type;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] data;
+    @Column(columnDefinition = "TEXT")
+    private String data;
 
     @OneToOne
     @JoinColumn(name = "message_id", referencedColumnName = "message_id")

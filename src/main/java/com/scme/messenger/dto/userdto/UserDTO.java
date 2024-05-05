@@ -1,5 +1,6 @@
 package com.scme.messenger.dto.userdto;
 
+import com.scme.messenger.encryption.util.PublicKey;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class UserDTO {
     @Email(message = "Email address should be a valid value")
     private String email;
 
+    private PublicKey publicKey;
     @Schema(
             description = "Role of the user if 1 is DOCTOR if 0 is STUDENT"
     )

@@ -14,8 +14,9 @@ import java.util.UUID;
 @Builder
 public class MarkSeenRequest {
 
+    @com.scme.messenger.validations.UUID
+    private UUID chatId;
+
     @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits")
     private String senderId;
-    @NotEmpty
-    private List<UUID> messageIds;
 }

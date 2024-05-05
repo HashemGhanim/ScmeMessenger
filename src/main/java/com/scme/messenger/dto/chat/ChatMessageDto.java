@@ -1,6 +1,7 @@
 package com.scme.messenger.dto.chat;
 
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -20,6 +21,12 @@ public class ChatMessageDto {
 
     @NotEmpty(message = "Your message should not be empty")
     private String content;
+
+    private String filename;
+
+    private String mime_type;
+
+    private String data;
 
     private Date timestamp;
 

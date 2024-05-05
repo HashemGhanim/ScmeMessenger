@@ -18,8 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Set;
 
 
 @RestController
@@ -36,16 +34,19 @@ public class ChatMessageController {
                                @DestinationVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String senderId,
                                @DestinationVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String recepientId){
 
-        iChatMessageService.save(chatMessageDto , senderId , recepientId);
+        SenderMessageDto message = iChatMessageService.save(chatMessageDto , senderId , recepientId);
         simpMessagingTemplate.convertAndSendToUser(recepientId , "/queue/messages",
                 ChatNotificationDto.builder()
                         .senderId(senderId)
                         .recepientId(recepientId)
                         .content(chatMessageDto.getContent())
+                        .mime_type(chatMessageDto.getMime_type())
+                        .filename(chatMessageDto.getFilename())
+                        .data(chatMessageDto.getData())
                         .build()
         );
+        simpMessagingTemplate.convertAndSendToUser(senderId , "/recent/send/message", message);
     }
-
 
     @DeleteMapping("/messages")
     @PreAuthorize("#chatMessageIdDto.senderId == authentication.principal.username")
@@ -72,7 +73,6 @@ public class ChatMessageController {
                         .statusMsg(ResponseConstants.MESSAGE_200)
                         .build());
     }
-
 
     @PatchMapping("/messages/mark-seen")
     @PreAuthorize("#markSeenRequest.senderId == authentication.principal.username")

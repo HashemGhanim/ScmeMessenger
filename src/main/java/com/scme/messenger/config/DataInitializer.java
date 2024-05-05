@@ -1,5 +1,7 @@
 package com.scme.messenger.config;
 
+import com.scme.messenger.model.KeyPair;
+import com.scme.messenger.services.IKeyPairService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +19,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private IKeyPairService iKeyPairService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -55,6 +60,16 @@ public class DataInitializer implements CommandLineRunner {
                 .role(Role.STUDENT)
                 .registered(true)
                 .build();
+
+        KeyPair keyPair1 = iKeyPairService.save(user1);
+        KeyPair keyPair2 = iKeyPairService.save(user2);
+        KeyPair keyPair3 = iKeyPairService.save(user3);
+        KeyPair keyPair4 = iKeyPairService.save(user4);
+
+        user1.setKeyPair(keyPair1);
+        user2.setKeyPair(keyPair2);
+        user3.setKeyPair(keyPair3);
+        user4.setKeyPair(keyPair4);
 
         userRepo.save(user1);
         userRepo.save(user2);

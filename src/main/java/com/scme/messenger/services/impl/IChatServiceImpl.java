@@ -1,10 +1,7 @@
 package com.scme.messenger.services.impl;
 
 import com.scme.messenger.constants.ResponseConstants;
-import com.scme.messenger.dto.chat.ChatDto;
-import com.scme.messenger.dto.chat.ChatMessageResponseDto;
-import com.scme.messenger.dto.chat.ChatPreviewResponseDto;
-import com.scme.messenger.dto.chat.ChatResponseDto;
+import com.scme.messenger.dto.chat.*;
 import com.scme.messenger.dto.userdto.UserDTO;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.ChatMapper;

@@ -26,7 +26,7 @@ public class IChatMessageServiceImpl implements IChatMessageService {
 
     @Transactional
     @Override
-    public void save(ChatMessageDto chatMessageDto, String senderId , String recepientId) {
+    public SenderMessageDto save(ChatMessageDto chatMessageDto, String senderId , String recepientId) {
 
         ChatMessage chat = chatMessageMapper.convertToChatMessage(chatMessageDto, senderId , recepientId);
 
@@ -35,7 +35,14 @@ public class IChatMessageServiceImpl implements IChatMessageService {
 
         ChatMessage res = chatMessageRepo.save(chat);
 
-        log.info(res.toString());
+        return SenderMessageDto.builder()
+                .messageId(res.getMessageId())
+                .content(res.getContent())
+                .data(res.getAttachment().getData())
+                .filename(res.getAttachment().getFilename())
+                .mime_type(res.getAttachment().getMime_type())
+                .timestamp(res.getTimestamp())
+                .build();
     }
 
 
@@ -63,7 +70,7 @@ public class IChatMessageServiceImpl implements IChatMessageService {
     @Transactional
     @Override
     public void messagesMarkSeen(MarkSeenRequest markSeenRequest) {
-        chatMessageRepo.markAsSeen(markSeenRequest.getMessageIds());
+        chatMessageRepo.markAsSeen(markSeenRequest.getChatId() , markSeenRequest.getSenderId());
     }
 
 
