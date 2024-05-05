@@ -14,7 +14,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatNotificationDto {
-    private
     private String senderId;
     private String recepientId;
     private String content;
