@@ -35,21 +35,12 @@ public class ChatMessageController {
                                @DestinationVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String recepientId){
 
         SenderMessageDto message = iChatMessageService.save(chatMessageDto , senderId , recepientId);
-        simpMessagingTemplate.convertAndSendToUser(recepientId , "/queue/messages",
-                ChatNotificationDto.builder()
-                        .senderId(senderId)
-                        .recepientId(recepientId)
-                        .content(chatMessageDto.getContent())
-                        .mime_type(chatMessageDto.getMime_type())
-                        .filename(chatMessageDto.getFilename())
-                        .data(chatMessageDto.getData())
-                        .build()
-        );
+        simpMessagingTemplate.convertAndSendToUser(recepientId , "/queue/messages", message);
         simpMessagingTemplate.convertAndSendToUser(senderId , "/recent/send/message", message);
     }
 
     @DeleteMapping("/messages")
-    @PreAuthorize("#chatMessageIdDto.senderId == authentication.principal.username")
+    @PreAuthorize("#chatMessageIdDto.senderId == authentication.principal.username || #chatMessageIdDto.recepientId == authentication.principal.username")
     public ResponseEntity<?> deleteMessage(@Valid @RequestBody ChatMessageIdDto chatMessageIdDto){
 
         iChatMessageService.deleteMessage(chatMessageIdDto);
