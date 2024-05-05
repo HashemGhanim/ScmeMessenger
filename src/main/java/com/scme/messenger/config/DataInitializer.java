@@ -25,41 +25,46 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        User user1 = User.builder()
-                .email("hashemzerei45@gmail.com")
-                .name("Hashem")
-                .userId("20201101")
-                .password(passwordEncoder.encode("Hh@123456"))
-                .role(Role.STUDENT)
-                .registered(true)
-                .build();
+//        User user1 = User.builder()
+//                .email("hashemzerei45@gmail.com")
+//                .name("Hashem")
+//                .userId("20201101")
+//                .password(passwordEncoder.encode("Hh@123456"))
+//                .role(Role.STUDENT)
+//                .registered(true)
+//                .build();
+//
+//        User user2 = User.builder()
+//                .email("moodghoz@gmail.com")
+//                .name("Mahmmoud")
+//                .userId("20201102")
+//                .password(passwordEncoder.encode("Hh@123456"))
+//                .role(Role.ADMIN)
+//                .registered(true)
+//                .build();
+//
+//        User user3 = User.builder()
+//                .email("salmanzerei45@gmail.com")
+//                .name("Salman")
+//                .userId("20201103")
+//                .password(passwordEncoder.encode("Hh@123456"))
+//                .role(Role.STUDENT)
+//                .registered(true)
+//                .build();
+//
+//        User user4 = User.builder()
+//                .email("hasheeem1712@gmail.com")
+//                .name("Sami")
+//                .userId("20201104")
+//                .password(passwordEncoder.encode("Hh@123456"))
+//                .role(Role.STUDENT)
+//                .registered(true)
+//                .build();
 
-        User user2 = User.builder()
-                .email("moodghoz@gmail.com")
-                .name("Mahmmoud")
-                .userId("20201102")
-                .password(passwordEncoder.encode("Hh@123456"))
-                .role(Role.ADMIN)
-                .registered(true)
-                .build();
-
-        User user3 = User.builder()
-                .email("salmanzerei45@gmail.com")
-                .name("Salman")
-                .userId("20201103")
-                .password(passwordEncoder.encode("Hh@123456"))
-                .role(Role.STUDENT)
-                .registered(true)
-                .build();
-
-        User user4 = User.builder()
-                .email("hasheeem1712@gmail.com")
-                .name("Sami")
-                .userId("20201104")
-                .password(passwordEncoder.encode("Hh@123456"))
-                .role(Role.STUDENT)
-                .registered(true)
-                .build();
+        User user1 = userRepo.getReferenceById("20201101");
+        User user2 = userRepo.getReferenceById("20201102");
+        User user3 = userRepo.getReferenceById("20201103");
+        User user4 = userRepo.getReferenceById("20201104");
 
         KeyPair keyPair1 = iKeyPairService.save(user1);
         KeyPair keyPair2 = iKeyPairService.save(user2);
