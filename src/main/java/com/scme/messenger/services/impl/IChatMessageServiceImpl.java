@@ -37,10 +37,13 @@ public class IChatMessageServiceImpl implements IChatMessageService {
 
         return SenderMessageDto.builder()
                 .messageId(res.getMessageId())
+                .chatId(res.getFirstChatId())
+                .senderId(res.getFirstSenderId())
+                .recepientId(res.getFirstRecepientId())
                 .content(res.getContent())
-                .data(res.getAttachment().getData())
-                .filename(res.getAttachment().getFilename())
-                .mime_type(res.getAttachment().getMime_type())
+                .data(res.getAttachment() == null ? "" : res.getAttachment().getData())
+                .filename(res.getAttachment() == null ? "" : res.getAttachment().getFilename())
+                .mime_type(res.getAttachment() == null ? "" : res.getAttachment().getMime_type())
                 .timestamp(res.getTimestamp())
                 .build();
     }

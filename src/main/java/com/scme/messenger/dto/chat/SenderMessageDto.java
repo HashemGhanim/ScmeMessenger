@@ -13,14 +13,12 @@ import java.util.UUID;
 @NoArgsConstructor
 public class SenderMessageDto {
     private UUID messageId;
-
+    private UUID chatId;
+    private String senderId;
+    private String recepientId;
     private String content;
-
     private String filename;
-
     private String mime_type;
-
     private String data;
-
     private Date timestamp;
 }
