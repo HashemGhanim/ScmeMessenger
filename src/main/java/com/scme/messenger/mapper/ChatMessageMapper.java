@@ -54,9 +54,10 @@ public class ChatMessageMapper {
         c.setContent(chatMessageDto.getContent());
         c.setTimestamp(chatMessageDto.getTimestamp());
 
-        attachment.setChatMessage(c);
-
-        c.setAttachment(attachment);
+        if(chatMessageDto.getData().length() > 0){
+            attachment.setChatMessage(c);
+            c.setAttachment(attachment);
+        }
 
         return c;
     }

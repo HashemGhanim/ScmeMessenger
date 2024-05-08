@@ -6,6 +6,7 @@ import com.scme.messenger.dto.group.*;
 import com.scme.messenger.services.IChatMessageService;
 import com.scme.messenger.services.IGroupMessageService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,9 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Validated
@@ -61,5 +61,14 @@ public class GroupMessageController {
                         .statusCode(ResponseConstants.STATUS_201)
                         .statusMsg(ResponseConstants.MESSAGE_201)
                         .build());
+    }
+
+    @GetMapping("/group/message/{userId}")
+    public ResponseEntity<?> getPinnedGroupMessage(
+            @PathVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String userId
+    ){
+        List<GroupMessageResponseDto> messages = iGroupMessageService.getPinnedMessages(userId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(messages);
     }
 }
