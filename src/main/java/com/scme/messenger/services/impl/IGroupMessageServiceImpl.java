@@ -3,6 +3,7 @@ package com.scme.messenger.services.impl;
 import com.scme.messenger.constants.ResponseConstants;
 import com.scme.messenger.dto.group.GroupMessageDto;
 import com.scme.messenger.dto.group.GroupMessageIdDto;
+import com.scme.messenger.dto.group.GroupMessageIdPinDto;
 import com.scme.messenger.dto.group.SenderGroupMessageDto;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.GroupMessageMapper;
@@ -47,5 +48,17 @@ public class IGroupMessageServiceImpl implements IGroupMessageService {
             throw new BadRequestException(ResponseConstants.MESSAGE_NOT_FOUND);
 
         groupMessageRepo.deleteById(messageIdDto.getMessageId());
+    }
+
+    @Override
+    public void pinMessage(GroupMessageIdPinDto groupMessageIdPinDto) {
+        if(!groupMessageRepo.existsById(groupMessageIdPinDto.getMessageId()))
+            throw new BadRequestException(ResponseConstants.MESSAGE_NOT_FOUND);
+
+        GroupMessage groupMessage = groupMessageRepo.getReferenceById(groupMessageIdPinDto.getMessageId());
+
+        groupMessage.setPinned(true);
+
+        groupMessageRepo.save(groupMessage);
     }
 }

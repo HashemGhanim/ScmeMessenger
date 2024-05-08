@@ -2,10 +2,7 @@ package com.scme.messenger.controller;
 
 import com.scme.messenger.constants.ResponseConstants;
 import com.scme.messenger.dto.ResponseDto;
-import com.scme.messenger.dto.group.GroupMessageDto;
-import com.scme.messenger.dto.group.GroupMessageIdDto;
-import com.scme.messenger.dto.group.GroupNotificationDto;
-import com.scme.messenger.dto.group.SenderGroupMessageDto;
+import com.scme.messenger.dto.group.*;
 import com.scme.messenger.services.IChatMessageService;
 import com.scme.messenger.services.IGroupMessageService;
 import jakarta.validation.Valid;
@@ -19,6 +16,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,4 +52,14 @@ public class GroupMessageController {
                 );
     }
 
+    @PatchMapping("/group/message")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
+    public ResponseEntity<?> pinGroupMessage(@Valid @RequestBody GroupMessageIdPinDto groupMessageIdPinDto){
+        iGroupMessageService.pinMessage(groupMessageIdPinDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseDto.builder()
+                        .statusCode(ResponseConstants.STATUS_201)
+                        .statusMsg(ResponseConstants.MESSAGE_201)
+                        .build());
+    }
 }

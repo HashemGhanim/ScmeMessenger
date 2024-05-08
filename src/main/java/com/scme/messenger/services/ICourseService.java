@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface ICourseService {
     void create(CourseDto courseDto);
-    CourseResponseDto get(String courseId, String moduleId);
+    CourseResponseDto get(String courseId, String moduleId, int page, int size);
     void update(CourseDto courseDto);
     void delete(String courseId, String moduleId);
     Set<CoursePreviewResponseDto> getAllCoursesOfStudent(String studentId);

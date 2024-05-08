@@ -57,7 +57,7 @@ public class CourseMapper {
 
 
     @Transactional
-    public CourseResponseDto getCourseResponseDto(Course course){
+    public CourseResponseDto getCourseResponseDto(Course course, int page, int size){
         Set<User> users = course.getUsers();
         Set<GroupMessage> messages = course.getGroupMessages();
 
@@ -74,7 +74,8 @@ public class CourseMapper {
                 .messages(
                         messages.stream()
                                 .sorted(Comparator.comparing(GroupMessage::getTimestamp).reversed())
-                                .limit(limitOfMessages)
+                                .skip(page * limitOfMessages)
+                                .limit((page * limitOfMessages) + limitOfMessages)
                                 .map(groupMessage -> GroupMessageResponseDto.builder()
                                         .senderId(groupMessage.getUser().getUserId())
                                         .content(groupMessage.getContent())

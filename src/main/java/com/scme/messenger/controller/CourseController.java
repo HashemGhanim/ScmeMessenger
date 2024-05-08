@@ -42,10 +42,12 @@ public class CourseController {
     @AuthorizeCourseAccess
     public ResponseEntity<?> get(
             @PathVariable @Pattern(regexp = "^[1-9]$", message = "Course Id must be greater than zero") String courseId,
-            @PathVariable @Pattern(regexp = "^\\d{6}$", message = "Module Id must be 6 digits") String moduleId
+            @PathVariable @Pattern(regexp = "^\\d{6}$", message = "Module Id must be 6 digits") String moduleId,
+            @RequestParam(name = "page" , defaultValue = "0") int page,
+            @RequestParam(name = "size" , defaultValue = "20") int size
     ){
 
-        CourseResponseDto courseDto = iCourseService.get(courseId , moduleId);
+        CourseResponseDto courseDto = iCourseService.get(courseId , moduleId, page, size);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(courseDto);
     }

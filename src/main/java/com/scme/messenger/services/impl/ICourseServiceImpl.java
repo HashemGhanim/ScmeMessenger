@@ -5,16 +5,13 @@ import com.scme.messenger.constants.Role;
 import com.scme.messenger.dto.course.CourseDto;
 import com.scme.messenger.dto.course.CoursePreviewResponseDto;
 import com.scme.messenger.dto.course.CourseResponseDto;
-import com.scme.messenger.dto.userdto.UserDTO;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.CourseMapper;
 import com.scme.messenger.model.Course;
 import com.scme.messenger.model.composite.CourseID;
 import com.scme.messenger.repository.CourseRepo;
 import com.scme.messenger.services.ICourseService;
-import com.scme.messenger.services.IUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -43,7 +40,7 @@ public class ICourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public CourseResponseDto get(String courseId, String moduleId) {
+    public CourseResponseDto get(String courseId, String moduleId, int page, int size) {
         CourseID courseID = CourseID.builder()
                 .moduleId(moduleId)
                 .courseId(courseId)
@@ -52,7 +49,7 @@ public class ICourseServiceImpl implements ICourseService {
         Course course = Optional.of(courseRepo.getReferenceById(courseID))
                 .orElseThrow(()-> new BadRequestException(ResponseConstants.COURSE_NOT_FOUND));
 
-        return courseMapper.getCourseResponseDto(course);
+        return courseMapper.getCourseResponseDto(course, page, size);
     }
 
     @Override
