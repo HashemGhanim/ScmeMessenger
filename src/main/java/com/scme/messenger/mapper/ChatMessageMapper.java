@@ -54,6 +54,8 @@ public class ChatMessageMapper {
         c.setContent(chatMessageDto.getContent());
         c.setTimestamp(chatMessageDto.getTimestamp());
 
+        attachment.setChatMessage(c);
+
         c.setAttachment(attachment);
 
         return c;
@@ -81,9 +83,9 @@ public class ChatMessageMapper {
                     .content(chatMessage.getContent())
                     .timestamp(chatMessage.getTimestamp())
                     .seen(chatMessage.isSeen())
-                    .filename(chatMessage.getAttachment() == null ? "":chatMessage.getAttachment().getFilename())
-                    .data(chatMessage.getAttachment() == null ? "":chatMessage.getAttachment().getData())
-                    .mime_type(chatMessage.getAttachment() == null ? "":chatMessage.getAttachment().getMime_type())
+                    .filename(chatMessage.getAttachment() == null ? null:chatMessage.getAttachment().getFilename())
+                    .data(chatMessage.getAttachment() == null ? null:chatMessage.getAttachment().getData())
+                    .mime_type(chatMessage.getAttachment() == null ? null:chatMessage.getAttachment().getMime_type())
                     .build();
 
         return ChatMessageResponseDto.builder()
@@ -94,9 +96,9 @@ public class ChatMessageMapper {
                 .content(chatMessage.getContent())
                 .timestamp(chatMessage.getTimestamp())
                 .seen(chatMessage.isSeen())
-                .filename(chatMessage.getAttachment() == null ? "": chatMessage.getAttachment().getFilename())
-                .data(chatMessage.getAttachment() == null ? "": chatMessage.getAttachment().getData())
-                .mime_type(chatMessage.getAttachment() == null ? "": chatMessage.getAttachment().getMime_type())
+                .filename(chatMessage.getAttachment() == null ? null: chatMessage.getAttachment().getFilename())
+                .data(chatMessage.getAttachment() == null ? null: chatMessage.getAttachment().getData())
+                .mime_type(chatMessage.getAttachment() == null ? null: chatMessage.getAttachment().getMime_type())
                 .build();
     }
 

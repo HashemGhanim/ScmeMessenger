@@ -59,6 +59,9 @@ public class IUserServiceImpl implements IUserService {
         User user = Optional.of(userRepo.getReferenceById(userId))
                 .orElseThrow(() -> new BadRequestException(ResponseConstants.USER_NOT_FOUND));
 
+        if(!user.isRegistered())
+            throw new BadRequestException(ResponseConstants.USER_NOT_FOUND);
+
         UserDTO userDTO = UserMapper.convertUserToDTO(user, new UserDTO());
 
         return userDTO;

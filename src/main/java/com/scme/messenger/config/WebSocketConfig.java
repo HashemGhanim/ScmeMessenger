@@ -51,7 +51,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic", "/user");
+        registry.enableSimpleBroker("/group", "/user");
         registry.setApplicationDestinationPrefixes("/app");
         registry.setUserDestinationPrefix("/user");
     }
@@ -75,7 +75,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     assert authorizationHeader != null;
                     String token = authorizationHeader.substring(7);
 
-                    log.info(token);
 
                     String userId = jwtService.extractUsername(token);
                     UserDetails user = userDetailsService.loadUserByUsername(userId);

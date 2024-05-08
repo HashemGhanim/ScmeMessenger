@@ -33,6 +33,7 @@ public class UserDTO {
     private String email;
 
     private PublicKey publicKey;
+
     @Schema(
             description = "Role of the user if 1 is DOCTOR if 0 is STUDENT"
     )

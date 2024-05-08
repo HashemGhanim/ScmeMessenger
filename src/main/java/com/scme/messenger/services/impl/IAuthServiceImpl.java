@@ -2,6 +2,7 @@ package com.scme.messenger.services.impl;
 
 import com.scme.messenger.dto.authenticationdto.OtpCode;
 import com.scme.messenger.dto.authenticationdto.PasswordDto;
+import com.scme.messenger.dto.userdto.AuthenticatedUserDto;
 import com.scme.messenger.encryption.IRSAKeysGenerator;
 import com.scme.messenger.encryption.util.KeyPairUtil;
 import com.scme.messenger.exception.BadRequestException;
@@ -96,12 +97,12 @@ public class IAuthServiceImpl implements IAuthService {
 
         user.setPassword(passwordEncoder.encode(password.getPassword()));
 
-        user.setRegistered(true);
-
-        // Generate a public and private key and save them in database
-        KeyPair keyPair = iKeyPairService.save(user);
-
-        user.setKeyPair(keyPair);
+        if(!user.isRegistered()){
+            // Generate a public and private key and save them in database
+            KeyPair keyPair = iKeyPairService.save(user);
+            user.setRegistered(true);
+            user.setKeyPair(keyPair);
+        }
 
         userRepo.save(user);
     }
@@ -109,7 +110,7 @@ public class IAuthServiceImpl implements IAuthService {
     private AuthenticationResponseDTO generateToken(String userId) {
         User user = userRepo.getReferenceById(userId);
 
-        UserDTO userDTO = UserMapper.convertUserToDTO(user, new UserDTO());
+        AuthenticatedUserDto userDTO = UserMapper.convertUserToAuthUserDto(user);
 
         String token = jwtService.generateToken(user);
 

@@ -1,5 +1,6 @@
 package com.scme.messenger.dto.authenticationdto;
 
+import com.scme.messenger.dto.userdto.AuthenticatedUserDto;
 import com.scme.messenger.dto.userdto.UserDTO;
 
 import lombok.AllArgsConstructor;
@@ -17,5 +18,5 @@ public class AuthenticationResponseDTO {
     private String statusCode;
     private String statusMsg;
     private String token;
-    private UserDTO user;
+    private AuthenticatedUserDto user;
 }

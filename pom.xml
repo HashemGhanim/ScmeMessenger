@@ -27,8 +27,13 @@
 	
 	
 	<dependencies>
-		
-		
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
+
 		<dependency>
     		<groupId>org.springframework.security</groupId>
    			<artifactId>spring-security-messaging</artifactId>
@@ -168,8 +173,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<source>17</source>
-       				<target>17</target>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

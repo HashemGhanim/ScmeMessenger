@@ -1,0 +1,91 @@
+package com.scme.messenger.controller;
+
+import com.scme.messenger.constants.ResponseConstants;
+import com.scme.messenger.dto.ResponseDto;
+import com.scme.messenger.dto.course.CourseDto;
+import com.scme.messenger.dto.course.CoursePreviewResponseDto;
+import com.scme.messenger.dto.course.CourseResponseDto;
+import com.scme.messenger.services.ICourseService;
+import com.scme.messenger.validations.AuthorizeCourseAccess;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping(value = "/course", produces = {MediaType.APPLICATION_JSON_VALUE})
+@Validated
+public class CourseController {
+
+    private final ICourseService iCourseService;
+
+    @PostMapping
+    public ResponseEntity<?> create(@Valid @RequestBody CourseDto courseDto){
+        iCourseService.create(courseDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseDto.builder()
+                        .statusCode(ResponseConstants.STATUS_201)
+                        .statusMsg(ResponseConstants.MESSAGE_201)
+                        .build());
+    }
+
+    @GetMapping("/{moduleId}/{courseId}")
+    @AuthorizeCourseAccess
+    public ResponseEntity<?> get(
+            @PathVariable @Pattern(regexp = "^[1-9]$", message = "Course Id must be greater than zero") String courseId,
+            @PathVariable @Pattern(regexp = "^\\d{6}$", message = "Module Id must be 6 digits") String moduleId
+    ){
+
+        CourseResponseDto courseDto = iCourseService.get(courseId , moduleId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(courseDto);
+    }
+
+    @PatchMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> update(@Valid @RequestBody CourseDto courseDto){
+
+        iCourseService.update(courseDto);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.builder()
+                        .statusCode(ResponseConstants.STATUS_200)
+                        .statusMsg(ResponseConstants.MESSAGE_200)
+                        .build());
+    }
+
+    @DeleteMapping("/{moduleId}/{courseId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> delete(
+            @PathVariable @Pattern(regexp = "^[1-9]$", message = "Course Id must be greater than zero") String courseId,
+            @PathVariable @Pattern(regexp = "^\\d{6}$", message = "Module Id must be 6 digits") String moduleId
+    ){
+
+        iCourseService.delete(courseId , moduleId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseDto.builder()
+                        .statusCode(ResponseConstants.STATUS_200)
+                        .statusMsg(ResponseConstants.MESSAGE_200)
+                        .build());
+    }
+
+    @GetMapping("/{studentId}")
+    @PreAuthorize("hasRole('ROLE_STUDENT') && #studentId == authentication.principal.username")
+    public ResponseEntity<?> getAllCoursesOfStudent(
+            @PathVariable @Pattern(regexp = "^\\d{8}$", message = "Student Id must be 6 digits") String studentId
+    ){
+        Set<CoursePreviewResponseDto> courses = iCourseService.getAllCoursesOfStudent(studentId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(courses);
+    }
+}

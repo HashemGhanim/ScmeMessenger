@@ -91,7 +91,7 @@ public class ChatMessage extends BaseEntity implements Serializable {
     private String content;
     private Date timestamp;
 
-    @OneToOne(mappedBy = "chatMessage", cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToOne(mappedBy = "chatMessage", fetch = FetchType.EAGER,cascade = CascadeType.ALL , orphanRemoval = true)
     private Attachment attachment;
 
     @PrePersist

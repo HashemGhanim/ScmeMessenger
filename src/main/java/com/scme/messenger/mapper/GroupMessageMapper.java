@@ -1,39 +1,55 @@
 package com.scme.messenger.mapper;
 
 import com.scme.messenger.dto.group.GroupMessageDto;
+import com.scme.messenger.dto.group.SenderGroupMessageDto;
 import com.scme.messenger.model.GroupMessage;
+import com.scme.messenger.model.GroupMessageAttachment;
 import com.scme.messenger.model.User;
-import com.scme.messenger.model.composite.GroupMessageID;
+import com.scme.messenger.repository.UserRepo;
 import com.scme.messenger.services.IUserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class GroupMessageMapper {
 
-    @Autowired
-    private static IUserService iUserService;
+    private final UserRepo userRepo;
 
-    public static GroupMessage convertToGroupMessage(GroupMessageDto groupMessageDto){
+    public GroupMessage convertToGroupMessage(GroupMessageDto groupMessageDto){
 
-        User user = UserMapper.convertDtoToUser(new User() , iUserService.getUser(groupMessageDto.getSenderId()));
+        User user = userRepo.getReferenceById(groupMessageDto.getSenderId());
 
         return GroupMessage.builder()
-                .groupMessageID(GroupMessageID.builder()
-                        .courseId(groupMessageDto.getCourseId())
-                        .moduleId(groupMessageDto.getModuleId())
-                        .build())
+                .courseId(groupMessageDto.getCourseId())
+                .moduleId(groupMessageDto.getModuleId())
                 .content(groupMessageDto.getContent())
                 .timestamp(groupMessageDto.getTimestamp())
                 .user(user)
                 .build();
     }
 
-    public static GroupMessageDto convertToGroupMessageDto(GroupMessage groupMessage){
+    public  GroupMessageDto convertToGroupMessageDto(GroupMessage groupMessage){
         return GroupMessageDto.builder()
                 .senderId(groupMessage.getUser().getUserId())
                 .content(groupMessage.getContent())
-                .courseId(groupMessage.getGroupMessageID().getCourseId())
-                .moduleId(groupMessage.getGroupMessageID().getModuleId())
+                .courseId(groupMessage.getCourseId())
+                .moduleId(groupMessage.getModuleId())
                 .timestamp(groupMessage.getTimestamp())
+                .build();
+    }
+
+    public  SenderGroupMessageDto convertToSenderGroupMessageDto(GroupMessage groupMessage){
+        GroupMessageAttachment attachment = groupMessage.getAttachment();
+        return SenderGroupMessageDto.builder()
+                .courseId(groupMessage.getCourseId())
+                .moduleId(groupMessage.getModuleId())
+                .senderId(groupMessage.getUser().getUserId())
+                .content(groupMessage.getContent())
+                .filename(attachment == null ? null : attachment.getFilename())
+                .mime_type(attachment == null ? null : attachment.getMime_type())
+                .data(attachment == null ? null : attachment.getData())
                 .build();
     }
 

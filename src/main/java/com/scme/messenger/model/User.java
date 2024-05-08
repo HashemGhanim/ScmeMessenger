@@ -90,6 +90,9 @@ public class User extends BaseEntity implements UserDetails {
 	@OneToMany(mappedBy = "secondRecepientUser")
 	private Set<ChatMessage> secondRecepientMessages;
 
+	@OneToMany(mappedBy = "instructor")
+	private Set<Course> manages;
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return role.getAuthorities();

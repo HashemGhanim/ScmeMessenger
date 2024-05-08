@@ -4,6 +4,7 @@ import com.scme.messenger.model.KeyPair;
 import com.scme.messenger.services.IKeyPairService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import com.scme.messenger.constants.Role;
 import com.scme.messenger.model.User;
 import com.scme.messenger.repository.UserRepo;
 
+@Profile("!test")
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -30,7 +32,7 @@ public class DataInitializer implements CommandLineRunner {
 //                .name("Hashem")
 //                .userId("20201101")
 //                .password(passwordEncoder.encode("Hh@123456"))
-//                .role(Role.STUDENT)
+//                .role(Role.DOCTOR)
 //                .registered(true)
 //                .build();
 //

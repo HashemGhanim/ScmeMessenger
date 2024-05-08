@@ -1,5 +1,6 @@
 package com.scme.messenger.model;
 
+import java.util.List;
 import java.util.Set;
 
 import java.io.Serializable;
@@ -32,11 +33,6 @@ public class Course extends BaseEntity implements Serializable {
 
     private String name;
 
-    @ColumnDefault(value = "1")
-    private Integer members;
-
-    private String imagePath;
-
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "course_user", joinColumns = {
@@ -51,7 +47,13 @@ public class Course extends BaseEntity implements Serializable {
     private Module module;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE , orphanRemoval = true)
     private Set<GroupMessage> groupMessages;
+
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "instructor_id", referencedColumnName = "user_id")
+    private User instructor;
 
 }

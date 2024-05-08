@@ -2,9 +2,9 @@ package com.scme.messenger.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.scme.messenger.model.composite.GroupMessageID;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,8 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;;
+;
 
 @Getter
 @Setter
@@ -24,8 +23,16 @@ import org.hibernate.annotations.OnDeleteAction;;
 @Table(name = "group_message")
 public class GroupMessage extends BaseEntity implements Serializable {
 
-    @EmbeddedId
-    private GroupMessageID groupMessageID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "message_id")
+    private UUID messageId;
+
+    @Column(name = "course_id")
+    private String courseId;
+
+    @Column(name = "module_id")
+    private String moduleId;
 
     @JsonIgnore
     @ManyToOne
@@ -42,5 +49,8 @@ public class GroupMessage extends BaseEntity implements Serializable {
 
     private String content;
     private Date timestamp;
+
+    @OneToOne(mappedBy = "groupMessage", fetch = FetchType.EAGER,cascade = CascadeType.ALL , orphanRemoval = true)
+    private GroupMessageAttachment attachment;
 
 }
