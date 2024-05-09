@@ -1,6 +1,8 @@
 package com.scme.messenger.dto.course;
 
+import com.scme.messenger.dto.group.GroupMessageResponseDto;
 import com.scme.messenger.dto.userdto.UserDTO;
+import com.scme.messenger.dto.userdto.UserResponseDto;
 import lombok.*;
 
 import java.util.List;
@@ -13,7 +15,8 @@ import java.util.List;
 public class CoursePreviewResponseDto {
     private String courseId;
     private String moduleId;
-    private UserDTO instructor;
+    private UserResponseDto instructor;
     private String name;
+    private GroupMessageResponseDto lastMessage;
     private int members;
 }

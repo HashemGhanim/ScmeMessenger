@@ -3,6 +3,7 @@ package com.scme.messenger.services.impl;
 import com.scme.messenger.constants.ResponseConstants;
 import com.scme.messenger.constants.Role;
 import com.scme.messenger.dto.course.CourseDto;
+import com.scme.messenger.dto.course.CourseIdDto;
 import com.scme.messenger.dto.course.CoursePreviewResponseDto;
 import com.scme.messenger.dto.course.CourseResponseDto;
 import com.scme.messenger.exception.BadRequestException;
@@ -35,6 +36,8 @@ public class ICourseServiceImpl implements ICourseService {
 
         if(!course.getInstructor().getRole().equals(Role.DOCTOR))
             throw new BadRequestException(ResponseConstants.USER_IS_NOT_INSTRUCTOR);
+
+        course.setStopConversation(false);
 
         courseRepo.save(course);
     }
@@ -90,6 +93,40 @@ public class ICourseServiceImpl implements ICourseService {
                 .map(course -> courseMapper.getCoursePreviewResponseDto(course))
                 .collect(Collectors.toSet());
         return userCourses;
+    }
+
+    @Override
+    public void stopConversationOfGroup(CourseIdDto courseIdDto) {
+        CourseID courseID = CourseID.builder()
+                .courseId(courseIdDto.getCourseId())
+                .moduleId(courseIdDto.getModuleId())
+                .build();
+
+        if(!courseRepo.existsById(courseID))
+            throw new BadRequestException(ResponseConstants.COURSE_NOT_FOUND);
+
+        Course course = courseRepo.getReferenceById(courseID);
+
+        course.setStopConversation(true);
+
+        courseRepo.save(course);
+    }
+
+    @Override
+    public void allowConversationOfGroup(CourseIdDto courseIdDto) {
+        CourseID courseID = CourseID.builder()
+                .courseId(courseIdDto.getCourseId())
+                .moduleId(courseIdDto.getModuleId())
+                .build();
+
+        if(!courseRepo.existsById(courseID))
+            throw new BadRequestException(ResponseConstants.COURSE_NOT_FOUND);
+
+        Course course = courseRepo.getReferenceById(courseID);
+
+        course.setStopConversation(false);
+
+        courseRepo.save(course);
     }
 
 

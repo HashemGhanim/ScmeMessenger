@@ -2,6 +2,7 @@ package com.scme.messenger.mapper;
 
 import com.scme.messenger.dto.group.GroupMessageDto;
 import com.scme.messenger.dto.group.SenderGroupMessageDto;
+import com.scme.messenger.dto.userdto.SenderDto;
 import com.scme.messenger.model.GroupMessage;
 import com.scme.messenger.model.GroupMessageAttachment;
 import com.scme.messenger.model.User;
@@ -45,7 +46,7 @@ public class GroupMessageMapper {
         return SenderGroupMessageDto.builder()
                 .courseId(groupMessage.getCourseId())
                 .moduleId(groupMessage.getModuleId())
-                .senderId(groupMessage.getUser().getUserId())
+                .sender(UserMapper.convertUserToSenderDto(groupMessage.getUser()))
                 .content(groupMessage.getContent())
                 .filename(attachment == null ? null : attachment.getFilename())
                 .mime_type(attachment == null ? null : attachment.getMime_type())

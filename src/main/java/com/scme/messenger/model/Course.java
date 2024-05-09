@@ -56,4 +56,6 @@ public class Course extends BaseEntity implements Serializable {
     @JoinColumn(name = "instructor_id", referencedColumnName = "user_id")
     private User instructor;
 
+    private boolean stopConversation = false;
+
 }

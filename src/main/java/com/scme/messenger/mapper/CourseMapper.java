@@ -5,7 +5,6 @@ import com.scme.messenger.dto.course.CourseDto;
 import com.scme.messenger.dto.course.CoursePreviewResponseDto;
 import com.scme.messenger.dto.course.CourseResponseDto;
 import com.scme.messenger.dto.group.GroupMessageResponseDto;
-import com.scme.messenger.dto.userdto.UserDTO;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.model.*;
 import com.scme.messenger.model.composite.CourseID;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,10 +65,10 @@ public class CourseMapper {
         return CourseResponseDto.builder()
                 .courseId(course.getCourseID().getCourseId())
                 .moduleId(course.getCourseID().getModuleId())
-                .instructor(UserMapper.convertUserToDTO(course.getInstructor(), new UserDTO()))
-                .members(users == null ? 0 : users.size())
+                .instructor(UserMapper.convertUserToUserResponseDto(course.getInstructor()))
+                .members(users == null ? 1 : users.size() + 1)
                 .users(users.stream()
-                        .map(user -> UserMapper.convertUserToDTO(user , new UserDTO()))
+                        .map(user -> UserMapper.convertUserToUserResponseDto(user))
                         .collect(Collectors.toList())
                 )
                 .messages(
@@ -86,18 +86,35 @@ public class CourseMapper {
                                         .build())
                                 .collect(Collectors.toList())
                 )
+                .stopConversation(course.isStopConversation())
                 .name(course.getName())
                 .build();
     }
 
     public CoursePreviewResponseDto getCoursePreviewResponseDto(Course course){
         Set<User> users = course.getUsers();
+        List<GroupMessageResponseDto> lastMessage = course.getGroupMessages().stream()
+                .sorted(Comparator.comparing(GroupMessage::getTimestamp).reversed())
+                .limit(1)
+                .map(groupMessage -> GroupMessageResponseDto.builder()
+                        .senderId(groupMessage.getUser().getUserId())
+                        .courseId(groupMessage.getCourseId())
+                        .moduleId(groupMessage.getModuleId())
+                        .content(groupMessage.getContent())
+                        .filename(groupMessage.getAttachment() == null ? null : groupMessage.getAttachment().getFilename())
+                        .mime_type(groupMessage.getAttachment() == null ? null : groupMessage.getAttachment().getMime_type())
+                        .data(groupMessage.getAttachment() == null ? null : groupMessage.getAttachment().getData())
+                        .timestamp(groupMessage.getTimestamp())
+                        .build())
+                .collect(Collectors.toList());
+
         return CoursePreviewResponseDto.builder()
                 .courseId(course.getCourseID().getCourseId())
                 .moduleId(course.getCourseID().getModuleId())
-                .instructor(UserMapper.convertUserToDTO(course.getInstructor(), new UserDTO()))
-                .members(users == null ? 0 : users.size())
+                .instructor(UserMapper.convertUserToUserResponseDto(course.getInstructor()))
+                .members(users == null ? 1 : users.size() + 1)
                 .name(course.getName())
+                .lastMessage(lastMessage.size() == 0 ? null : lastMessage.get(0))
                 .build();
     }
 }

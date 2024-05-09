@@ -5,6 +5,7 @@ import com.scme.messenger.dto.ResponseDto;
 import com.scme.messenger.dto.group.*;
 import com.scme.messenger.services.IChatMessageService;
 import com.scme.messenger.services.IGroupMessageService;
+import com.scme.messenger.validations.AuthorizeSentGroupMessage;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class GroupMessageController {
     private final IGroupMessageService iGroupMessageService;
 
     @MessageMapping("/group")
+    @AuthorizeSentGroupMessage
     public void processGroupMessage(@Payload GroupMessageDto groupMessageDto){
         SenderGroupMessageDto message = iGroupMessageService.save(groupMessageDto);
 //        log.info(groupMessageDto.getModuleId() + " " + groupMessageDto.getCourseId());
@@ -71,4 +73,6 @@ public class GroupMessageController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(messages);
     }
+
+
 }

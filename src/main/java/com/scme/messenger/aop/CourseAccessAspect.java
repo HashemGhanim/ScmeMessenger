@@ -1,16 +1,15 @@
 package com.scme.messenger.aop;
 
 import com.scme.messenger.constants.Role;
-import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.model.Course;
 import com.scme.messenger.model.User;
 import com.scme.messenger.model.composite.CourseID;
 import com.scme.messenger.repository.CourseRepo;
 import com.scme.messenger.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,12 +26,12 @@ public class CourseAccessAspect {
     @Pointcut("@annotation(com.scme.messenger.validations.AuthorizeCourseAccess)")
     public void courseAccessPointcut(){}
 
-    @Before("courseAccessPointcut() && args(courseId, moduleId)")
-    public void checkCourseAccess(JoinPoint joinPoint, String courseId, String moduleId) throws Throwable{
+    @Around("courseAccessPointcut() && args(courseId, moduleId)")
+    public Object checkCourseAccess(ProceedingJoinPoint joinPoint, String courseId, String moduleId) throws Throwable{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication == null || !authentication.isAuthenticated()){
-            throw new SecurityException("User is not authenticated");
+            return null;
         }
 
         final String authenticatedUserId = authentication.getName();
@@ -47,9 +46,10 @@ public class CourseAccessAspect {
         User user = userRepo.getReferenceById(authenticatedUserId);
         boolean allowed = course.getInstructor().getUserId().equals(authenticatedUserId) || course.getUsers().contains(user) || user.getRole().equals(Role.ADMIN);
         if (!allowed) {
-            throw new BadRequestException("User does not have access to the course: " + courseId);
+            return null;
         }
 
+        return joinPoint.proceed();
     }
 
 }
