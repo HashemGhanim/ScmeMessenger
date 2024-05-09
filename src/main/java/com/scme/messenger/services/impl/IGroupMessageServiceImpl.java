@@ -4,6 +4,7 @@ import com.scme.messenger.constants.ResponseConstants;
 import com.scme.messenger.dto.group.*;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.GroupMessageMapper;
+import com.scme.messenger.mapper.UserMapper;
 import com.scme.messenger.model.Course;
 import com.scme.messenger.model.GroupMessage;
 import com.scme.messenger.model.GroupMessageAttachment;
@@ -77,9 +78,8 @@ public class IGroupMessageServiceImpl implements IGroupMessageService {
 
         return messages.stream()
                 .map(message -> GroupMessageResponseDto.builder()
-                        .courseId(message.getCourseId())
-                        .moduleId(message.getModuleId())
-                        .senderId(message.getUser().getUserId())
+                        .messageId(message.getMessageId())
+                        .sender(UserMapper.convertUserToUserResponseDto(message.getUser()))
                         .content(message.getContent())
                         .mime_type(message.getAttachment() == null ? null : message.getAttachment().getMime_type())
                         .filename(message.getAttachment() == null ? null : message.getAttachment().getFilename())
