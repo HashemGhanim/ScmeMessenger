@@ -3,16 +3,11 @@ package com.scme.messenger.services.impl;
 import com.scme.messenger.dto.authenticationdto.OtpCode;
 import com.scme.messenger.dto.authenticationdto.PasswordDto;
 import com.scme.messenger.dto.userdto.AuthenticatedUserDto;
-import com.scme.messenger.encryption.IRSAKeysGenerator;
-import com.scme.messenger.encryption.util.KeyPairUtil;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.UserOtpMapper;
-import com.scme.messenger.model.KeyPair;
 import com.scme.messenger.model.UserOtp;
-import com.scme.messenger.repository.KeyPairRepo;
 import com.scme.messenger.repository.UserOtpRepo;
 
-import com.scme.messenger.services.IKeyPairService;
 import org.quartz.SchedulerException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +17,6 @@ import org.springframework.stereotype.Service;
 import com.scme.messenger.constants.ResponseConstants;
 import com.scme.messenger.dto.authenticationdto.AuthenticationRequestDTO;
 import com.scme.messenger.dto.authenticationdto.AuthenticationResponseDTO;
-import com.scme.messenger.dto.userdto.UserDTO;
 import com.scme.messenger.mapper.UserMapper;
 import com.scme.messenger.model.User;
 import com.scme.messenger.repository.UserRepo;
@@ -52,7 +46,6 @@ public class IAuthServiceImpl implements IAuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final IKeyPairService iKeyPairService;
 
     @Override
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) throws SchedulerException {
@@ -64,7 +57,6 @@ public class IAuthServiceImpl implements IAuthService {
         User user = userRepo.getReferenceById(request.getUserId());
 
         if (user.isTwoStepVerify()) {
-
             emailJobService.scheduleJobs(LocalDateTime.now(), request.getUserId());
             return null;
         }
@@ -98,13 +90,15 @@ public class IAuthServiceImpl implements IAuthService {
         user.setPassword(passwordEncoder.encode(password.getPassword()));
 
         if(!user.isRegistered()){
-            // Generate a public and private key and save them in database
-            KeyPair keyPair = iKeyPairService.save(user);
             user.setRegistered(true);
-            user.setKeyPair(keyPair);
         }
 
         userRepo.save(user);
+    }
+
+    @Override
+    public void verifyUserWithOtp(String userId) throws SchedulerException {
+        emailJobService.scheduleJobs(LocalDateTime.now(), userId);
     }
 
     private AuthenticationResponseDTO generateToken(String userId) {

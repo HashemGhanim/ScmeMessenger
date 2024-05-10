@@ -16,6 +16,7 @@ public class SenderMessageDto {
     private UUID chatId;
     private String senderId;
     private String recepientId;
+    private String iv;
     private String content;
     private String filename;
     private String mime_type;

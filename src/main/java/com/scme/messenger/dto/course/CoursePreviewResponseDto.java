@@ -15,6 +15,7 @@ import java.util.List;
 public class CoursePreviewResponseDto {
     private String courseId;
     private String moduleId;
+    private String secretKey;
     private UserResponseDto instructor;
     private String name;
     private GroupMessageResponseDto lastMessage;

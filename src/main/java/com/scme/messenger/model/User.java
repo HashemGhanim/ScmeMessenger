@@ -42,10 +42,6 @@ public class User extends BaseEntity implements UserDetails {
 	private Role role;
 
 	@JsonIgnore
-	@OneToOne(mappedBy = "user")
-	private KeyPair keyPair;
-
-	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL , mappedBy = "blocked")
 	private Set<User> blocks = new HashSet<>();
 

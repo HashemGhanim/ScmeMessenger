@@ -30,8 +30,6 @@ public class AuthController {
 
     private final IAuthService authService;
 
-    private final IEmailJobService emailJobService;
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody AuthenticationRequestDTO request) throws SchedulerException {
 
@@ -52,7 +50,7 @@ public class AuthController {
             @PathVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String userId)
             throws SchedulerException {
 
-        emailJobService.scheduleJobs(LocalDateTime.now(), userId);
+        authService.verifyUserWithOtp(userId);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto(ResponseConstants.STATUS_201, ResponseConstants.MESSAGE_201));

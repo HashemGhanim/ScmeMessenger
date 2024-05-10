@@ -3,13 +3,11 @@ package com.scme.messenger.controller;
 import com.scme.messenger.constants.ResponseConstants;
 import com.scme.messenger.dto.ResponseDto;
 import com.scme.messenger.dto.group.*;
-import com.scme.messenger.services.IChatMessageService;
 import com.scme.messenger.services.IGroupMessageService;
 import com.scme.messenger.validations.AuthorizeSentGroupMessage;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,7 +22,6 @@ import java.util.List;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@Slf4j
 public class GroupMessageController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
@@ -34,7 +31,6 @@ public class GroupMessageController {
     @AuthorizeSentGroupMessage
     public void processGroupMessage(@Payload GroupMessageDto groupMessageDto){
         SenderGroupMessageDto message = iGroupMessageService.save(groupMessageDto);
-//        log.info(groupMessageDto.getModuleId() + " " + groupMessageDto.getCourseId());
         simpMessagingTemplate.convertAndSend("/group/"+groupMessageDto.getModuleId()+"/"+groupMessageDto.getCourseId(),
                 message
         );
@@ -54,7 +50,7 @@ public class GroupMessageController {
                 );
     }
 
-    @PatchMapping("/group/message")
+    @PatchMapping("/group/pin/message")
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
     public ResponseEntity<?> pinGroupMessage(@Valid @RequestBody GroupMessageIdPinDto groupMessageIdPinDto){
         iGroupMessageService.pinMessage(groupMessageIdPinDto);
@@ -65,11 +61,12 @@ public class GroupMessageController {
                         .build());
     }
 
-    @GetMapping("/group/message/{userId}")
+    @GetMapping("/group/pin/message/{userId}")
+    @PreAuthorize("#userId == authentication.principal.username")
     public ResponseEntity<?> getPinnedGroupMessage(
             @PathVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String userId
     ){
-        List<GroupMessageResponseDto> messages = iGroupMessageService.getPinnedMessages(userId);
+        List<GroupMessagePinResponseDto> messages = iGroupMessageService.getPinnedMessages(userId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(messages);
     }

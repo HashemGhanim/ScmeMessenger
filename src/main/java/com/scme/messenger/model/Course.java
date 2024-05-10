@@ -57,5 +57,6 @@ public class Course extends BaseEntity implements Serializable {
     private User instructor;
 
     private boolean stopConversation = false;
+    private String secretKey;
 
 }

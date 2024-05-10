@@ -14,6 +14,7 @@ import java.util.UUID;
 public class ChatPreviewResponseDto {
     private UUID chatId;
     private UserDTO recepient;
+    private String secretKey;
     private ChatMessageResponseDto lastMessage;
     private int numberOfUnseenMessages;
     private boolean blocked;

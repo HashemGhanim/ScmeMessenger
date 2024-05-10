@@ -6,11 +6,14 @@ import com.scme.messenger.dto.course.CourseDto;
 import com.scme.messenger.dto.course.CourseIdDto;
 import com.scme.messenger.dto.course.CoursePreviewResponseDto;
 import com.scme.messenger.dto.course.CourseResponseDto;
+import com.scme.messenger.encryption.AesEncryptionGenerator;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.CourseMapper;
 import com.scme.messenger.model.Course;
+import com.scme.messenger.model.User;
 import com.scme.messenger.model.composite.CourseID;
 import com.scme.messenger.repository.CourseRepo;
+import com.scme.messenger.repository.UserRepo;
 import com.scme.messenger.services.ICourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,9 +28,10 @@ public class ICourseServiceImpl implements ICourseService {
 
     private final CourseRepo courseRepo;
     private final CourseMapper courseMapper;
+    private final UserRepo userRepo;
 
     @Override
-    public void create(CourseDto courseDto) {
+    public void create(CourseDto courseDto) throws Exception {
 
         Course course = courseMapper.getCourse(courseDto);
 
@@ -36,8 +40,6 @@ public class ICourseServiceImpl implements ICourseService {
 
         if(!course.getInstructor().getRole().equals(Role.DOCTOR))
             throw new BadRequestException(ResponseConstants.USER_IS_NOT_INSTRUCTOR);
-
-        course.setStopConversation(false);
 
         courseRepo.save(course);
     }
@@ -56,7 +58,7 @@ public class ICourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public void update(CourseDto courseDto) {
+    public void update(CourseDto courseDto) throws Exception {
         CourseID courseID = CourseID.builder()
                 .moduleId(courseDto.getModuleId())
                 .courseId(courseDto.getCourseId())
@@ -82,16 +84,30 @@ public class ICourseServiceImpl implements ICourseService {
                 .moduleId(moduleId)
                 .courseId(courseId)
                 .build();
-        courseRepo.deleteById(courseID);
+
+        Course course = Optional.of(courseRepo.getReferenceById(courseID))
+                .orElseThrow(()-> new BadRequestException(ResponseConstants.COURSE_NOT_FOUND));
+
+        courseRepo.delete(course);
     }
 
     @Override
-    public Set<CoursePreviewResponseDto> getAllCoursesOfStudent(String studentId) {
-        Set<Course> courses = courseRepo.findAllByStudentId(studentId);
+    public Set<CoursePreviewResponseDto> getAllCoursesOfUser(String userId) {
+        User user = Optional.of(userRepo.getReferenceById(userId))
+                .orElseThrow(()-> new BadRequestException(ResponseConstants.USER_NOT_FOUND));
+        Set<Course> courses;
 
+        if(user.getRole().equals(Role.ADMIN))
+            return null;
+        else if(user.getRole().equals(Role.DOCTOR)){
+            courses = user.getCourses();
+        }else{
+            courses = courseRepo.findAllByStudentId(userId);
+        }
         Set<CoursePreviewResponseDto> userCourses = courses.stream()
                 .map(course -> courseMapper.getCoursePreviewResponseDto(course))
                 .collect(Collectors.toSet());
+
         return userCourses;
     }
 

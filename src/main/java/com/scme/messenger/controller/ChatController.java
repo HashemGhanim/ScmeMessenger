@@ -5,10 +5,8 @@ import com.scme.messenger.dto.ResponseDto;
 import com.scme.messenger.dto.chat.ChatDto;
 import com.scme.messenger.dto.chat.ChatPreviewResponseDto;
 import com.scme.messenger.dto.chat.ChatResponseDto;
-import com.scme.messenger.dto.chat.MarkSeenRequest;
 import com.scme.messenger.services.IChatService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,7 +30,7 @@ public class ChatController {
 
     @PostMapping
     @PreAuthorize("#chatDto.senderId == authentication.principal.username")
-    public ResponseEntity<?> create(@Valid @RequestBody ChatDto chatDto){
+    public ResponseEntity<?> create(@Valid @RequestBody ChatDto chatDto) throws Exception {
 
         iChatService.create(chatDto);
 
@@ -41,6 +39,7 @@ public class ChatController {
                         .statusCode(ResponseConstants.STATUS_201)
                         .statusMsg(ResponseConstants.MESSAGE_201)
                         .build());
+
     }
 
     @DeleteMapping

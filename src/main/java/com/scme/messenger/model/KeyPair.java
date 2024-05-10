@@ -12,25 +12,25 @@ import java.math.BigInteger;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+//@Entity
 public class KeyPair extends BaseEntity{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(columnDefinition = "VARCHAR(400)")
-    @Convert(converter = BigIntegerStringConverter.class)
+//    @Column(columnDefinition = "VARCHAR(400)")
+//    @Convert(converter = BigIntegerStringConverter.class)
     private BigInteger publicKey;
 
-    @Column(columnDefinition = "VARCHAR(400)")
-    @Convert(converter = BigIntegerStringConverter.class)
+//    @Column(columnDefinition = "VARCHAR(400)")
+//    @Convert(converter = BigIntegerStringConverter.class)
     private BigInteger privateKey;
 
-    @Column(columnDefinition = "VARCHAR(400)")
-    @Convert(converter = BigIntegerStringConverter.class)
+//    @Column(columnDefinition = "VARCHAR(400)")
+//    @Convert(converter = BigIntegerStringConverter.class)
     private BigInteger mod;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User user;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+//    private User user;
 }

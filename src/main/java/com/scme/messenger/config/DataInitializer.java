@@ -63,16 +63,6 @@ public class DataInitializer implements CommandLineRunner {
                 .registered(true)
                 .build();
 
-        KeyPair keyPair1 = iKeyPairService.save(user1);
-        KeyPair keyPair2 = iKeyPairService.save(user2);
-        KeyPair keyPair3 = iKeyPairService.save(user3);
-        KeyPair keyPair4 = iKeyPairService.save(user4);
-
-        user1.setKeyPair(keyPair1);
-        user2.setKeyPair(keyPair2);
-        user3.setKeyPair(keyPair3);
-        user4.setKeyPair(keyPair4);
-
         userRepo.save(user1);
         userRepo.save(user2);
         userRepo.save(user3);

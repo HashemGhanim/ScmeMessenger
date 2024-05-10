@@ -1,21 +1,22 @@
 package com.scme.messenger.services.impl;
 
 import com.scme.messenger.constants.ResponseConstants;
+import com.scme.messenger.constants.Role;
 import com.scme.messenger.dto.group.*;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.GroupMessageMapper;
 import com.scme.messenger.mapper.UserMapper;
-import com.scme.messenger.model.Course;
 import com.scme.messenger.model.GroupMessage;
 import com.scme.messenger.model.GroupMessageAttachment;
+import com.scme.messenger.model.User;
 import com.scme.messenger.repository.GroupMessageRepo;
 import com.scme.messenger.repository.UserRepo;
 import com.scme.messenger.services.IGroupMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -66,20 +67,41 @@ public class IGroupMessageServiceImpl implements IGroupMessageService {
         groupMessageRepo.save(groupMessage);
     }
 
+    @Transactional
     @Override
-    public List<GroupMessageResponseDto> getPinnedMessages(String userId) {
+    public List<GroupMessagePinResponseDto> getPinnedMessages(String userId) {
         if(!userRepo.isUserExist(userId))
             throw new BadRequestException(ResponseConstants.USER_NOT_FOUND);
 
-        List<GroupMessage> messages = userRepo.getReferenceById(userId).getCourses().stream()
-                .flatMap(course -> course.getGroupMessages().stream())
-                .filter(message -> message.isPinned())
-                .collect(Collectors.toList());
+        User user = userRepo.getReferenceById(userId);
+        List<GroupMessage> messages;
+        if(user.getRole().equals(Role.ADMIN))
+            return null;
+        else if(user.getRole().equals(Role.DOCTOR)){
+            messages = user.getManages().stream()
+                    .flatMap(course -> course.getGroupMessages().stream())
+                    .filter(message -> message.isPinned())
+                    .collect(Collectors.toList());
+        }else{
+            messages = user.getCourses().stream()
+                    .flatMap(course -> course.getGroupMessages().stream())
+                    .filter(message -> message.isPinned())
+                    .collect(Collectors.toList());
+        }
 
         return messages.stream()
-                .map(message -> GroupMessageResponseDto.builder()
+                .map(message -> GroupMessagePinResponseDto.builder()
                         .messageId(message.getMessageId())
                         .sender(UserMapper.convertUserToUserResponseDto(message.getUser()))
+                        .group(
+                                GroupDto.builder()
+                                        .courseId(message.getCourseId())
+                                        .moduleId(message.getModuleId())
+                                        .name(message.getCourse() == null ? null : message.getCourse().getName())
+                                        .secretKey(message.getCourse() == null ? null : message.getCourse().getSecretKey())
+                                        .build()
+                        )
+                        .iv(message.getIv())
                         .content(message.getContent())
                         .mime_type(message.getAttachment() == null ? null : message.getAttachment().getMime_type())
                         .filename(message.getAttachment() == null ? null : message.getAttachment().getFilename())

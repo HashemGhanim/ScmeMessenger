@@ -16,6 +16,7 @@ import java.util.UUID;
 public class SenderGroupMessageDto {
     private String courseId;
     private String moduleId;
+    private String iv;
     private SenderDto sender;
     private String content;
     private String filename;

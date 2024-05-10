@@ -28,4 +28,6 @@ public class ChatMessageEditDto {
 
     @NotEmpty(message = "Your message should not be empty")
     private String content;
+
+    private String iv;
 }

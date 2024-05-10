@@ -49,8 +49,8 @@ public class GroupMessage extends BaseEntity implements Serializable {
 
     private String content;
     private Date timestamp;
-
     private boolean pinned = false;
+    private String iv;
 
     @OneToOne(mappedBy = "groupMessage", fetch = FetchType.EAGER,cascade = CascadeType.ALL , orphanRemoval = true)
     private GroupMessageAttachment attachment;

@@ -28,6 +28,9 @@ public class IChatMessageServiceImpl implements IChatMessageService {
     @Override
     public SenderMessageDto save(ChatMessageDto chatMessageDto, String senderId , String recepientId) {
 
+        if(chatMessageDto.getContent().length() == 0 && chatMessageDto.getData().length() == 0)
+            throw new BadRequestException(ResponseConstants.MESSAGE_NOT_VALID);
+
         ChatMessage chat = chatMessageMapper.convertToChatMessage(chatMessageDto, senderId , recepientId);
 
         if(checkIfIsBlockedUser(chat))
@@ -40,10 +43,11 @@ public class IChatMessageServiceImpl implements IChatMessageService {
                 .chatId(res.getFirstChatId())
                 .senderId(res.getFirstSenderId())
                 .recepientId(res.getFirstRecepientId())
+                .iv(res.getIv())
                 .content(res.getContent())
-                .data(res.getAttachment() == null ? "" : res.getAttachment().getData())
-                .filename(res.getAttachment() == null ? "" : res.getAttachment().getFilename())
-                .mime_type(res.getAttachment() == null ? "" : res.getAttachment().getMime_type())
+                .data(res.getAttachment() == null ? null : res.getAttachment().getData())
+                .filename(res.getAttachment() == null ? null : res.getAttachment().getFilename())
+                .mime_type(res.getAttachment() == null ? null : res.getAttachment().getMime_type())
                 .timestamp(res.getTimestamp())
                 .build();
     }
@@ -65,6 +69,7 @@ public class IChatMessageServiceImpl implements IChatMessageService {
 
         if(message.isPresent() && !checkIfIsBlockedUser(message.get())){
             message.get().setContent(chatMessageEditDto.getContent());
+            message.get().setIv(chatMessageEditDto.getIv());
             chatMessageRepo.save(message.get());
         }
 

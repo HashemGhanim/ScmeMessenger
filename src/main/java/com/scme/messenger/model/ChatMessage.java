@@ -46,6 +46,7 @@ public class ChatMessage extends BaseEntity implements Serializable {
     private String secondRecepientId;
 
     private boolean seen = false;
+    private String iv;
 
     @JsonIgnore
     @ManyToOne

@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,8 +36,9 @@ public class IChatServiceImpl implements IChatService {
     @Value("${messages.limit}")
     private int limitOfMessages;
 
+    @Transactional
     @Override
-    public void create(ChatDto chatDto) {
+    public void create(ChatDto chatDto) throws Exception {
 
         if(chatRepo.isChatExist(chatDto.getSenderId() , chatDto.getRecepientId()))
             throw new BadRequestException(ResponseConstants.CHAT_IS_ALREADY_EXIST);
@@ -46,17 +48,31 @@ public class IChatServiceImpl implements IChatService {
         if(chatSender.getSender().getBlocks().contains(chatSender.getRecepient()))
             throw new BadRequestException(ResponseConstants.USER_IS_ALREADY_BLOCKED);
 
-        chatRepo.save(chatSender);
+        Chat chatReception;
 
         if(!chatRepo.isChatExist(chatDto.getRecepientId(), chatDto.getSenderId())){
-            Chat chatReception = Chat.builder()
+
+            chatReception = Chat.builder()
                     .chatID(ChatID.builder()
                             .chatId(chatSender.getChatID().getChatId())
                             .senderId(chatSender.getChatID().getRecepientId())
                             .recepientId(chatSender.getChatID().getSenderId())
                             .build())
+                    .secretKey(chatSender.getSecretKey())
                     .build();
+
+            chatRepo.save(chatSender);
             chatRepo.save(chatReception);
+
+        }else{
+            chatReception = chatRepo.getReferenceById(ChatID.builder()
+                    .chatId(chatSender.getChatID().getChatId())
+                    .senderId(chatSender.getChatID().getRecepientId())
+                    .recepientId(chatSender.getChatID().getSenderId())
+                    .build());
+
+            chatSender.setSecretKey(chatReception.getSecretKey());
+            chatRepo.save(chatSender);
         }
     }
 
@@ -107,6 +123,7 @@ public class IChatServiceImpl implements IChatService {
                 .chatId(chat.getChatID().getChatId())
                 .senderId(chat.getChatID().getSenderId())
                 .recepient(UserMapper.convertUserToDTO(chat.getRecepient(), new UserDTO()))
+                .secretKey(chat.getSecretKey())
                 .messages(Stream.concat(senderMessages.stream() , recepientMessages.stream())
                         .sorted(Comparator.comparing(ChatMessage::getTimestamp).reversed())
                         .skip(page * limitOfMessages)
@@ -138,6 +155,7 @@ public class IChatServiceImpl implements IChatService {
         return ChatPreviewResponseDto.builder()
                 .chatId(chat.getChatID().getChatId())
                 .recepient(UserMapper.convertUserToDTO(chat.getRecepient() , new UserDTO()))
+                .secretKey(chat.getSecretKey())
                 .lastMessage(lastMessage.size() > 0 ? lastMessage.get(0) : null)
                 .numberOfUnseenMessages(messages.size())
                 .block(chat.getSender().getBlocks().contains(chat.getRecepient()))

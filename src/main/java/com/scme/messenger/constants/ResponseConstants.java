@@ -7,12 +7,14 @@ public class ResponseConstants {
 
 
 
+
     private ResponseConstants() {
 
     }
 
     public static final String REG_EXP_FOR_PASSWORD = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
 
+    public static final String MESSAGE_NOT_VALID = "Message should not be empty, Please try again ...";
     public static final String CAN_NOT_SEND_MESSAGE = "You can not send message, Please try again ...";
     public static final String STUDENT_IS_ALREADY_SUBSCRIBED = "Student is already subscribe maybe in this course or other section, Please try again ...";
     public static final String USER_IS_NOT_STUDENT = "User is not student, Please try again ...";

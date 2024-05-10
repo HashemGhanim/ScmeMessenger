@@ -29,7 +29,8 @@ public class CourseController {
     private final ICourseService iCourseService;
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody CourseDto courseDto){
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> create(@Valid @RequestBody CourseDto courseDto) throws Exception {
         iCourseService.create(courseDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -55,7 +56,7 @@ public class CourseController {
 
     @PatchMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> update(@Valid @RequestBody CourseDto courseDto){
+    public ResponseEntity<?> update(@Valid @RequestBody CourseDto courseDto) throws Exception {
 
         iCourseService.update(courseDto);
 
@@ -80,12 +81,12 @@ public class CourseController {
                         .build());
     }
 
-    @GetMapping("/{studentId}")
-    @PreAuthorize("hasRole('ROLE_STUDENT') && #studentId == authentication.principal.username")
+    @GetMapping("/{userId}")
+    @PreAuthorize("#userId == authentication.principal.username && hasAnyRole('ROLE_DOCTOR' , 'ROLE_STUDENT')")
     public ResponseEntity<?> getAllCoursesOfStudent(
-            @PathVariable @Pattern(regexp = "^\\d{8}$", message = "Student Id must be 6 digits") String studentId
+            @PathVariable @Pattern(regexp = "^\\d{8}$", message = "Student Id must be 8 digits") String userId
     ){
-        Set<CoursePreviewResponseDto> courses = iCourseService.getAllCoursesOfStudent(studentId);
+        Set<CoursePreviewResponseDto> courses = iCourseService.getAllCoursesOfUser(userId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(courses);

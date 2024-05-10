@@ -14,4 +14,6 @@ public interface IAuthService {
     AuthenticationResponseDTO verifyOtp(OtpCode otpCode);
 
     void setPassword(PasswordDto password);
+
+    void verifyUserWithOtp(String userId) throws SchedulerException;
 }

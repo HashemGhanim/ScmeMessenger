@@ -8,7 +8,7 @@ import com.scme.messenger.dto.chat.MarkSeenRequest;
 import java.util.List;
 
 public interface IChatService {
-    void create(ChatDto chatDto);
+    void create(ChatDto chatDto) throws Exception;
     void delete(ChatDto chatDto);
     ChatResponseDto getChat(String senderId, String recepientId , int page, int size);
     List<ChatPreviewResponseDto> getAllChats(String senderId);

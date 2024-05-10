@@ -41,4 +41,6 @@ public class Chat extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "secondChat", fetch = FetchType.LAZY)
     private Set<ChatMessage> recepientChatMessages;
 
+    private String secretKey;
+
 }

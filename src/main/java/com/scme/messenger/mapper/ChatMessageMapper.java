@@ -54,6 +54,8 @@ public class ChatMessageMapper {
         c.setContent(chatMessageDto.getContent());
         c.setTimestamp(chatMessageDto.getTimestamp());
 
+        c.setIv(chatMessageDto.getIv());
+
         if(chatMessageDto.getData().length() > 0){
             attachment.setChatMessage(c);
             c.setAttachment(attachment);
@@ -79,6 +81,7 @@ public class ChatMessageMapper {
             return ChatMessageResponseDto.builder()
                     .messageId(chatMessage.getMessageId())
                     .chatId(null)
+                    .iv(chatMessage.getIv())
                     .senderId(chatMessage.getSecondRecepientId())
                     .recepientId(chatMessage.getSecondSenderId())
                     .content(chatMessage.getContent())
@@ -95,6 +98,7 @@ public class ChatMessageMapper {
                 .senderId(chatMessage.getFirstSenderId())
                 .recepientId(chatMessage.getFirstRecepientId())
                 .content(chatMessage.getContent())
+                .iv(chatMessage.getIv())
                 .timestamp(chatMessage.getTimestamp())
                 .seen(chatMessage.isSeen())
                 .filename(chatMessage.getAttachment() == null ? null: chatMessage.getAttachment().getFilename())

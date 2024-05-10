@@ -17,6 +17,7 @@ public class GroupMessageDto {
     private String moduleId;
     @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits")
     private String senderId;
+    private String iv;
     private String content;
     private String filename;
     private String mime_type;

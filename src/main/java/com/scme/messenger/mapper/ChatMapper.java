@@ -1,6 +1,7 @@
 package com.scme.messenger.mapper;
 
 import com.scme.messenger.dto.chat.ChatDto;
+import com.scme.messenger.encryption.AesEncryptionGenerator;
 import com.scme.messenger.model.Chat;
 import com.scme.messenger.model.User;
 import com.scme.messenger.model.composite.ChatID;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class ChatMapper {
 
     private final UserRepo userRepo;
-    public Chat convertToChat(ChatDto chatDto){
+    public Chat convertToChat(ChatDto chatDto) throws Exception {
 
         User sender = userRepo.getReferenceById(chatDto.getSenderId());
         User recepient = userRepo.getReferenceById(chatDto.getRecepientId());
@@ -25,6 +26,7 @@ public class ChatMapper {
                         .build())
                 .sender(sender)
                 .recepient(recepient)
+                .secretKey(AesEncryptionGenerator.generateKey())
                 .build();
     }
 

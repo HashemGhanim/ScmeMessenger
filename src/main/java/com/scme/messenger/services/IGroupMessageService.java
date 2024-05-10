@@ -3,7 +3,6 @@ package com.scme.messenger.services;
 import com.scme.messenger.dto.group.*;
 
 import java.util.List;
-import java.util.Set;
 
 public interface IGroupMessageService {
     SenderGroupMessageDto save(GroupMessageDto groupMessageDto);
@@ -12,5 +11,5 @@ public interface IGroupMessageService {
 
     void pinMessage(GroupMessageIdPinDto groupMessageIdPinDto);
 
-    List<GroupMessageResponseDto> getPinnedMessages(String userId);
+    List<GroupMessagePinResponseDto> getPinnedMessages(String userId);
 }

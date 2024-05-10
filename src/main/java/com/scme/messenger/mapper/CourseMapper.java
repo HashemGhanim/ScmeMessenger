@@ -5,6 +5,7 @@ import com.scme.messenger.dto.course.CourseDto;
 import com.scme.messenger.dto.course.CoursePreviewResponseDto;
 import com.scme.messenger.dto.course.CourseResponseDto;
 import com.scme.messenger.dto.group.GroupMessageResponseDto;
+import com.scme.messenger.encryption.AesEncryptionGenerator;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.model.*;
 import com.scme.messenger.model.composite.CourseID;
@@ -38,7 +39,7 @@ public class CourseMapper {
                 .build();
     }
 
-    public Course getCourse(CourseDto courseDto){
+    public Course getCourse(CourseDto courseDto) throws Exception {
         CourseID courseID = CourseID.builder()
                 .courseId(courseDto.getCourseId())
                 .moduleId(courseDto.getModuleId())
@@ -52,6 +53,8 @@ public class CourseMapper {
                 .courseID(courseID)
                 .name(courseDto.getName())
                 .instructor(instructor)
+                .secretKey(AesEncryptionGenerator.generateKey())
+                .stopConversation(false)
                 .build();
     }
 
@@ -65,6 +68,7 @@ public class CourseMapper {
         return CourseResponseDto.builder()
                 .courseId(course.getCourseID().getCourseId())
                 .moduleId(course.getCourseID().getModuleId())
+                .secretKey(course.getSecretKey())
                 .instructor(UserMapper.convertUserToUserResponseDto(course.getInstructor()))
                 .members(users == null ? 1 : users.size() + 1)
                 .users(users.stream()
@@ -79,11 +83,13 @@ public class CourseMapper {
                                 .map(groupMessage -> GroupMessageResponseDto.builder()
                                         .messageId(groupMessage.getMessageId())
                                         .sender(UserMapper.convertUserToUserResponseDto(groupMessage.getUser()))
+                                        .iv(groupMessage.getIv())
                                         .content(groupMessage.getContent())
                                         .mime_type(groupMessage.getAttachment() == null ? null : groupMessage.getAttachment().getMime_type())
                                         .filename(groupMessage.getAttachment() == null ? null : groupMessage.getAttachment().getFilename())
                                         .data(groupMessage.getAttachment() == null ? null : groupMessage.getAttachment().getData())
                                         .timestamp(groupMessage.getTimestamp())
+                                        .isPinned(groupMessage.isPinned())
                                         .build())
                                 .collect(Collectors.toList())
                 )
@@ -100,6 +106,7 @@ public class CourseMapper {
                 .map(groupMessage -> GroupMessageResponseDto.builder()
                         .messageId(groupMessage.getMessageId())
                         .sender(UserMapper.convertUserToUserResponseDto(groupMessage.getUser()))
+                        .iv(groupMessage.getIv())
                         .content(groupMessage.getContent())
                         .filename(groupMessage.getAttachment() == null ? null : groupMessage.getAttachment().getFilename())
                         .mime_type(groupMessage.getAttachment() == null ? null : groupMessage.getAttachment().getMime_type())
@@ -111,6 +118,7 @@ public class CourseMapper {
         return CoursePreviewResponseDto.builder()
                 .courseId(course.getCourseID().getCourseId())
                 .moduleId(course.getCourseID().getModuleId())
+                .secretKey(course.getSecretKey())
                 .instructor(UserMapper.convertUserToUserResponseDto(course.getInstructor()))
                 .members(users == null ? 1 : users.size() + 1)
                 .name(course.getName())

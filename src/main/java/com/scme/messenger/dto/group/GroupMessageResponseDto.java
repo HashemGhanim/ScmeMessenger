@@ -15,9 +15,11 @@ import java.util.UUID;
 public class GroupMessageResponseDto {
     private UUID messageId;
     private UserResponseDto sender;
+    private String iv;
     private String content;
     private String filename;
     private String mime_type;
     private String data;
+    private boolean isPinned;
     private Date timestamp;
 }

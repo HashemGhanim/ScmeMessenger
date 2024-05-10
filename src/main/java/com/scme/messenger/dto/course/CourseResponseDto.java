@@ -16,6 +16,7 @@ import java.util.List;
 public class CourseResponseDto {
     private String courseId;
     private String moduleId;
+    private String secretKey;
     private UserResponseDto instructor;
     private String name;
     private List<UserResponseDto> users;

@@ -15,10 +15,6 @@ public class UserMapper {
         userDTO.setUserId(user.getUserId());
         userDTO.setName(user.getName());
         userDTO.setEmail(user.getEmail());
-        userDTO.setPublicKey(PublicKey.builder()
-                        .e(user.getKeyPair() == null ? null :user.getKeyPair().getPublicKey())
-                        .n(user.getKeyPair() == null ? null : user.getKeyPair().getMod())
-                .build());
 
         if(user.getRole() == Role.ADMIN)
             userDTO.setRole(2);
@@ -53,14 +49,6 @@ public class UserMapper {
                 .userId(user.getUserId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .publicKey(PublicKey.builder()
-                        .e(user.getKeyPair().getPublicKey())
-                        .n(user.getKeyPair().getMod())
-                        .build())
-                .privateKey(PrivateKey.builder()
-                        .d(user.getKeyPair().getPublicKey())
-                        .n(user.getKeyPair().getMod())
-                        .build())
                 .build();
 
 

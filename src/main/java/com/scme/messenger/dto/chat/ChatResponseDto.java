@@ -17,6 +17,7 @@ public class ChatResponseDto {
     private UUID chatId;
     private String senderId;
     private UserDTO recepient;
+    private String secretKey;
     private List<ChatMessageResponseDto> messages;
     private boolean blocked;
     private boolean block;

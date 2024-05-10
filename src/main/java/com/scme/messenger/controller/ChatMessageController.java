@@ -4,6 +4,7 @@ import com.scme.messenger.constants.ResponseConstants;
 import com.scme.messenger.dto.ResponseDto;
 import com.scme.messenger.dto.chat.*;
 import com.scme.messenger.services.IChatMessageService;
+import com.scme.messenger.validations.AuthorizeSendPrivateMessage;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class ChatMessageController {
     private final IChatMessageService iChatMessageService;
 
     @MessageMapping("/chat/{senderId}/{recepientId}")
+    @AuthorizeSendPrivateMessage
     public void processMessage(@Valid @Payload ChatMessageDto chatMessageDto ,
                                @DestinationVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String senderId,
                                @DestinationVariable @Pattern(regexp = "^\\d{8}$", message = "User ID must be 8 digits") String recepientId){
@@ -40,7 +42,7 @@ public class ChatMessageController {
     }
 
     @DeleteMapping("/messages")
-    @PreAuthorize("#chatMessageIdDto.senderId == authentication.principal.username || #chatMessageIdDto.recepientId == authentication.principal.username")
+    @PreAuthorize("#chatMessageIdDto.senderId == authentication.principal.username")
     public ResponseEntity<?> deleteMessage(@Valid @RequestBody ChatMessageIdDto chatMessageIdDto){
 
         iChatMessageService.deleteMessage(chatMessageIdDto);
