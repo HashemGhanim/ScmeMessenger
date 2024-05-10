@@ -55,6 +55,7 @@ public class GroupMessageMapper {
     public  SenderGroupMessageDto convertToSenderGroupMessageDto(GroupMessage groupMessage){
         GroupMessageAttachment attachment = groupMessage.getAttachment();
         return SenderGroupMessageDto.builder()
+                .messageId(groupMessage.getMessageId())
                 .courseId(groupMessage.getCourseId())
                 .moduleId(groupMessage.getModuleId())
                 .iv(groupMessage.getIv())

@@ -14,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SenderGroupMessageDto {
+    private UUID messageId;
     private String courseId;
     private String moduleId;
     private String iv;
