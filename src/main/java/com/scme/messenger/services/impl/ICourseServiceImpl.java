@@ -6,7 +6,6 @@ import com.scme.messenger.dto.course.CourseDto;
 import com.scme.messenger.dto.course.CourseIdDto;
 import com.scme.messenger.dto.course.CoursePreviewResponseDto;
 import com.scme.messenger.dto.course.CourseResponseDto;
-import com.scme.messenger.encryption.AesEncryptionGenerator;
 import com.scme.messenger.exception.BadRequestException;
 import com.scme.messenger.mapper.CourseMapper;
 import com.scme.messenger.model.Course;
@@ -16,7 +15,9 @@ import com.scme.messenger.repository.CourseRepo;
 import com.scme.messenger.repository.UserRepo;
 import com.scme.messenger.services.ICourseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ICourseServiceImpl implements ICourseService {
 
     private final CourseRepo courseRepo;
@@ -38,7 +40,7 @@ public class ICourseServiceImpl implements ICourseService {
         if(courseRepo.existsById(course.getCourseID()))
             throw new BadRequestException(ResponseConstants.COURSE_IS_EXIST);
 
-        if(!course.getInstructor().getRole().equals(Role.DOCTOR))
+        if(course.getInstructor().getRole() != Role.DOCTOR)
             throw new BadRequestException(ResponseConstants.USER_IS_NOT_INSTRUCTOR);
 
         courseRepo.save(course);
@@ -69,7 +71,7 @@ public class ICourseServiceImpl implements ICourseService {
 
         Course tempCourse = courseMapper.getCourse(courseDto);
 
-        if(!tempCourse.getInstructor().getRole().equals(Role.DOCTOR))
+        if(tempCourse.getInstructor().getRole() != Role.DOCTOR)
             throw new BadRequestException(ResponseConstants.USER_IS_NOT_INSTRUCTOR);
 
         course.setInstructor(tempCourse.getInstructor());
@@ -91,16 +93,18 @@ public class ICourseServiceImpl implements ICourseService {
         courseRepo.delete(course);
     }
 
+    @Transactional
     @Override
     public Set<CoursePreviewResponseDto> getAllCoursesOfUser(String userId) {
         User user = Optional.of(userRepo.getReferenceById(userId))
                 .orElseThrow(()-> new BadRequestException(ResponseConstants.USER_NOT_FOUND));
         Set<Course> courses;
 
+
         if(user.getRole().equals(Role.ADMIN))
             return null;
         else if(user.getRole().equals(Role.DOCTOR)){
-            courses = user.getCourses();
+            courses = user.getManages();
         }else{
             courses = courseRepo.findAllByStudentId(userId);
         }

@@ -7,7 +7,6 @@ com/scme/messenger/filter/JwtAuthenticationFilter.class
 com/scme/messenger/model/UserOtp.class
 com/scme/messenger/model/User$UserBuilder.class
 com/scme/messenger/dto/authenticationdto/AuthenticationResponseDTO$AuthenticationResponseDTOBuilder.class
-com/scme/messenger/model/composite/GroupMessageID.class
 com/scme/messenger/services/impl/IEmailJobServiceImpl.class
 com/scme/messenger/dto/authenticationdto/PasswordDto$PasswordDtoBuilder.class
 com/scme/messenger/model/BaseEntity.class
