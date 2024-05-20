@@ -10,7 +10,9 @@ import com.scme.messenger.services.IModuleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +54,17 @@ public class IModuleServiceImpl implements IModuleService {
         moduleRepo.save(module);
 
         return moduleDto;
+    }
+
+    @Override
+    public List<ModuleDto> getAllModules() {
+        List<Module> dbModules = moduleRepo.findAll();
+
+        List<ModuleDto> moduleDtos = dbModules.stream()
+                .map(module -> moduleMapper.getModuleDto(module))
+                .collect(Collectors.toList());
+
+        return moduleDtos;
     }
 
 }

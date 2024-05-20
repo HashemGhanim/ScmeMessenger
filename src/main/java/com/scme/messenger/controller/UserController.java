@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -25,6 +26,17 @@ import java.util.Set;
 public class UserController {
 
         private final IUserService userService;
+
+
+        @GetMapping
+        @PreAuthorize("hasRole('ROLE_ADMIN')")
+        public ResponseEntity<?> getAllUsers() {
+
+                List<UserDTO> users = userService.getAllUsers();
+
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(users);
+        }
 
         @GetMapping("/{userId}/")
         @PreAuthorize("#userId == authentication.principal.username")

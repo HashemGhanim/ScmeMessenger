@@ -3,6 +3,7 @@ package com.scme.messenger.services;
 import com.scme.messenger.dto.userdto.BlockUserDto;
 import com.scme.messenger.dto.userdto.UserDTO;
 
+import java.util.List;
 import java.util.Set;
 
 public interface IUserService {
@@ -15,4 +16,6 @@ public interface IUserService {
     boolean blockUser(BlockUserDto blockUserDto);
     boolean unBlockUser(BlockUserDto blockUserDto);
     Set<UserDTO> searchUsers(String username , String userId);
+
+    List<UserDTO> getAllUsers();
 }

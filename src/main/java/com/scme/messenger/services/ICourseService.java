@@ -5,6 +5,7 @@ import com.scme.messenger.dto.course.CourseIdDto;
 import com.scme.messenger.dto.course.CoursePreviewResponseDto;
 import com.scme.messenger.dto.course.CourseResponseDto;
 
+import java.util.List;
 import java.util.Set;
 
 public interface ICourseService {
@@ -15,4 +16,6 @@ public interface ICourseService {
     Set<CoursePreviewResponseDto> getAllCoursesOfUser(String userId);
     void stopConversationOfGroup(CourseIdDto courseIdDto);
     void allowConversationOfGroup(CourseIdDto courseIdDto);
+
+    List<CoursePreviewResponseDto> getAllCourses();
 }

@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -38,6 +39,14 @@ public class CourseController {
                         .statusCode(ResponseConstants.STATUS_201)
                         .statusMsg(ResponseConstants.MESSAGE_201)
                         .build());
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllCourses(){
+        List<CoursePreviewResponseDto> coursePreviewResponseDtos = iCourseService.getAllCourses();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(coursePreviewResponseDtos);
     }
 
     @GetMapping("/{moduleId}/{courseId}")

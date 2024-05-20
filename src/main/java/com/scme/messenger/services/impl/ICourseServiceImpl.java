@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -147,6 +148,17 @@ public class ICourseServiceImpl implements ICourseService {
         course.setStopConversation(false);
 
         courseRepo.save(course);
+    }
+
+    @Override
+    public List<CoursePreviewResponseDto> getAllCourses() {
+        List<Course> dbCourses = courseRepo.findAll();
+
+        List<CoursePreviewResponseDto> coursePreviewResponseDtos = dbCourses.stream()
+                .map(course -> courseMapper.getCoursePreviewResponseDto(course))
+                .collect(Collectors.toList());
+
+        return coursePreviewResponseDtos;
     }
 
 

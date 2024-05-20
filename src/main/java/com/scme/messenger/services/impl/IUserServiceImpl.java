@@ -11,6 +11,7 @@ import com.scme.messenger.services.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -138,6 +139,17 @@ public class IUserServiceImpl implements IUserService {
                 .collect(Collectors.toSet());
 
         return finalUsers;
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        List<User> dbUsers = userRepo.findAll();
+
+        List<UserDTO> users = dbUsers.stream()
+                .map(user -> UserMapper.convertUserToDTO(user, new UserDTO()))
+                .collect(Collectors.toList());
+
+        return users;
     }
 
 }

@@ -14,6 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/module", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -54,6 +56,16 @@ public class ModuleController {
     ){
 
         ModuleDto moduleDto = iModuleService.get(moduleId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(moduleDto);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllModules(){
+
+        List<ModuleDto> moduleDto = iModuleService.getAllModules();
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(moduleDto);
