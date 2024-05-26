@@ -22,7 +22,7 @@ public class SubscriptionController {
     private final ISubscriptionService iSubscriptionService;
 
     @PostMapping
-    @PreAuthorize("#subscriptionDto.userId == authentication.principal.username")
+    @PreAuthorize("#subscriptionDto.userId == authentication.principal.username || hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> subscribeUser(@Valid @RequestBody SubscriptionDto subscriptionDto){
 
         iSubscriptionService.subscribe(subscriptionDto);
@@ -37,7 +37,7 @@ public class SubscriptionController {
     }
 
     @DeleteMapping
-    @PreAuthorize("#subscriptionDto.userId == authentication.principal.username")
+    @PreAuthorize("#subscriptionDto.userId == authentication.principal.username || hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> unSubscribeUser(@Valid @RequestBody SubscriptionDto subscriptionDto){
 
         iSubscriptionService.unSubscribe(subscriptionDto);
