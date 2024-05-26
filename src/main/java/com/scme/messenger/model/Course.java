@@ -47,7 +47,8 @@ public class Course extends BaseEntity implements Serializable {
     private Module module;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE , orphanRemoval = true)
+    @OneToMany(mappedBy = "course")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<GroupMessage> groupMessages;
 
 

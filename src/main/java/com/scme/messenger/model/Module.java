@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.util.Set;
 
 @Getter
@@ -22,7 +25,8 @@ public class Module extends BaseEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToMany(mappedBy = "module")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Course> courses;
 
 }
